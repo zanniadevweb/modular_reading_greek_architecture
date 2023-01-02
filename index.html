@@ -72,7 +72,7 @@
 				console.log(roundedRatioLengthWidth);
 				console.log(fractionFromFloat);
 				var numberOfSquareByBuildingSide = calculateNumberOfSquareByBuildingSide(textLength, textWidth);
-				console.log('TODO : ' + numberOfSquareByBuildingSide); // TODO
+				console.log('LENGTH & WIDTH NUMBER OF SQUARES : ' + numberOfSquareByBuildingSide); // TODO
 
 				var modulo1 = (feetUnitLengthCount / numberOfSquareByBuildingSide[0]).toFixed(1);
 				console.log(modulo1);
@@ -84,7 +84,7 @@
 				console.log(feetUnitLengthCount + ' PAR ' + numberOfSquareByBuildingSide[0] + ' CASES');
 				console.log(' ET : ');
 				console.log(feetUnitWidthCount + ' PAR ' + numberOfSquareByBuildingSide[1] + ' CASES');
-				console.log('POUR UN MODULE DE : ' + modulo2 + ' PIEDS PAR CASE');
+				console.log('POUR UN MODULE DE : ' + modulo1 + ' = ' + modulo2 + ' PIEDS PAR CASE');
 			}
 
 			function calculateNumberOfSquareByBuildingSide(textLength, textWidth) {
@@ -93,7 +93,7 @@
 				var ratioLength = 1;
 				var ratioWidth = 1;
 
-				for (var i = 1; i <= 11; i++)
+				for (var i = 1; i <= 100; i++)
 				{
 					ratioLength = textLength/i;
 					ratioWidth = textWidth/i;
@@ -121,24 +121,26 @@
 					var roundedSquareNumbersWidthArray = [];
 					var roundedSquareNumbersLengthArray = [];
 					var currentElementK = 0;
+					var currentElementKk = 0;
+					var currentElementL = 0;
 					for (var k = 0; k < squareNumbersWidthArray.length; k++)
 					{
 							currentElementK = roundingTwoNumbersAfterComma(squareNumbersWidthArray[k]); // TODO
 							roundedSquareNumbersWidthArray.push(currentElementK);
-							console.log(currentElementK);
+							// console.log(currentElementK);
 					}
-					console.log('THIS : ' + roundedSquareNumbersWidthArray); // TODO
+					// console.log('THIS : ' + roundedSquareNumbersWidthArray); // TODO
 
 					for (var kk = 0; kk < squareNumbersLengthArray.length; kk++)
 					{
-							var currentElementKk = roundingTwoNumbersAfterComma(squareNumbersLengthArray[kk]);  // TODO
+							currentElementKk = roundingTwoNumbersAfterComma(squareNumbersLengthArray[kk]);  // TODO
 							roundedSquareNumbersLengthArray.push(currentElementKk);
 					}
-					console.log('THAT ' + roundedSquareNumbersLengthArray);  // TODO
+					// console.log('THAT ' + roundedSquareNumbersLengthArray);  // TODO
 
 					for (var l = 0; l < squareNumbersLengthArray.length; l++)
 					{
-							var currentElementL = roundingTwoNumbersAfterComma(squareNumbersLengthArray[l]);
+							currentElementL = roundingTwoNumbersAfterComma(squareNumbersLengthArray[l]);
 							if (roundedSquareNumbersWidthArray.includes(currentElementL))
 							{
 									hasAtLeastOneCommonValue = true;
@@ -151,12 +153,15 @@
 				var indexLength = 0;
 				var indexWidth = 0;
 
+				console.log(roundedSquareNumbersLengthArray);
+				console.log(roundedSquareNumbersWidthArray);
+
 				if (needAnotherTurn) {
-					indexLength = roundedSquareNumbersLengthArray.indexOf(commonValues);
-					indexWidth = roundedSquareNumbersWidthArray.indexOf(commonValues);
+					indexLength = roundedSquareNumbersLengthArray.indexOf(commonValues[0]) + 1;
+					indexWidth = roundedSquareNumbersWidthArray.indexOf(commonValues[0]) + 1;
 				} else {
-					indexLength = squareNumbersLengthArray.indexOf(commonValues);
-					indexWidth = squareNumbersWidthArray.indexOf(commonValues);
+					indexLength = squareNumbersLengthArray.indexOf(commonValues[0]) + 1;
+					indexWidth = squareNumbersWidthArray.indexOf(commonValues[0]) + 1;
 				}
 
 				if (indexLength == -1)
@@ -173,10 +178,9 @@
 
 			function roundingTwoNumbersAfterComma(currentNumber)
 			{
-				var strNumber = String(currentNumber).slice(0, 4)
-				return
-					Number(strNumber)
-				;
+				var strNumber = String(currentNumber).slice(0, 4);
+				var realNumber = Number(strNumber);
+				return realNumber;
 			}
 
 			function calculateFractionFromFloat(ratioLengthWidth)
@@ -192,10 +196,10 @@
 				var denominator = Math.pow(10, len);
 				var numerator = fraction * denominator;
 
-				var divisor = gcd(numerator, denominator);    // Should be 5
+				var divisor = gcd(numerator, denominator);
 
-				numerator /= divisor;                         // Should be 687
-				denominator /= divisor;                       // Should be 2000
+				numerator /= divisor;
+				denominator /= divisor;
 
 				var normalizedFraction = (Math.floor(numerator) + '/' + Math.floor(denominator));
 				return normalizedFraction;
