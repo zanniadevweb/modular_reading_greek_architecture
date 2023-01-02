@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+	<head>
+		<title>Modular Greek Architecture Calculator - Alexandre ZANNI</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+	</head>
+		<h1>Calculateur de modules pour l'architecture grecque (Work in Progress)</h1>
+		<h3> Exemples d'unités de mesures antiques :</h3>
+
+		<table style="border: 1px solid black">
+		  <tr>
+		    <th>Culture</th>
+		    <th>Type</th>
+		    <th>Valeur moyenne (m)</th>
+		  </tr>
+		  <tr>
+		    <td>Punique</td>
+		    <td>Coudée / Cubit</td>
+		    <td>0,516</td>
+		  </tr>
+		  <tr>
+		    <td>Punique</td>
+		    <td>Pied</td>
+		    <td>0.3436</td>
+		  </tr>
+			<tr>
+				<td>Romain</td>
+				<td>Pied</td>
+				<td>0.295</td>
+			</tr>
+		</table>
+
+		</br></br>
+
+		</br></br>
+		<button onclick="calculateModularity()">GENERER CALCUL MODULES</button>
+		</br></br>
+		<h2>Résultat :</h2> <span id="spanResult"><h3>...</h3></span>
+
+		</br></br>
+		<h2> Remplir les champs ci-dessous avant de cliquer sur "GENERER CALCUL MODULES" :</h2>
+		<span id="spanSaisir"><h3>Référence principale :</h3></span>
+
+				Longueur édifice : <input type="text" id="inputLength" placeholder="8.40" size="100" title="Type in a length">
+				</br>
+				Largeur édifice : <input type="text" id="inputWidth" placeholder="4.60" size="100" title="Type in a width">
+				</br>
+				Valeur d'un pied en mètres : <input type="text" id="inputUnitValue" placeholder="0.3436" size="100" title="Type in a unit value">
+				</br>
+
+		</br></br>
+
+			<script>
+
+			function calculateModularity()
+			{
+			  var textLength = document.getElementById("inputLength").value;
+				textLength = 8.40;
+				var textWidth = document.getElementById("inputWidth").value;
+				textWidth = 4.60
+				var textUnitValue = document.getElementById("inputUnitValue").value;
+				textUnitValue = 0.3436;
+				// console.log(textLength + ' ' + textWidth + ' ' + textUnitValue + ' ');
+				var feetUnitLengthCount = Math.round(textLength/textUnitValue);
+				var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
+				console.log(feetUnitLengthCount);
+				console.log(feetUnitWidthCount);
+
+				var ratioLengthWidth = textLength/textWidth;
+				var roundedRatioLengthWidth = ratioLengthWidth.toFixed(1);
+				var fractionFromFloat = calculateFractionFromFloat(roundedRatioLengthWidth);
+				console.log(roundedRatioLengthWidth);
+				console.log(fractionFromFloat);
+			}
+
+			function calculateFractionFromFloat(ratioLengthWidth)
+			{
+				var gcd = function(a, b) {
+				  if (!b) return a;
+				  return gcd(b, a % b);
+				};
+
+				var fraction = ratioLengthWidth;
+				var len = fraction.toString().length - 2;
+
+				var denominator = Math.pow(10, len);
+				var numerator = fraction * denominator;
+
+				var divisor = gcd(numerator, denominator);    // Should be 5
+
+				numerator /= divisor;                         // Should be 687
+				denominator /= divisor;                       // Should be 2000
+
+				var normalizedFraction = (Math.floor(numerator) + '/' + Math.floor(denominator));
+				return normalizedFraction;
+			}
+
+		</script>
+
+	</body>
+</html>
