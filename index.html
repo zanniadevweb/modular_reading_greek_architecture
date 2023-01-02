@@ -17,7 +17,7 @@
 		  <tr>
 		    <td>Punique</td>
 		    <td>Coudée / Cubit</td>
-		    <td>0,516</td>
+		    <td>0.516</td>
 		  </tr>
 		  <tr>
 		    <td>Punique</td>
@@ -55,12 +55,9 @@
 
 			function calculateModularity()
 			{
-			  var textLength = document.getElementById("inputLength").value;
-				textLength = 8.40;
-				var textWidth = document.getElementById("inputWidth").value;
-				textWidth = 4.60;
-				var textUnitValue = document.getElementById("inputUnitValue").value;
-				textUnitValue = 0.3436;
+			  var textLength = document.getElementById("inputLength").value; // 8.40
+				var textWidth = document.getElementById("inputWidth").value; // 4.60
+				var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
 				var feetUnitLengthCount = Math.round(textLength/textUnitValue);
 				var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
 				console.log(feetUnitLengthCount);
@@ -125,18 +122,15 @@
 					var currentElementL = 0;
 					for (var k = 0; k < squareNumbersWidthArray.length; k++)
 					{
-							currentElementK = roundingTwoNumbersAfterComma(squareNumbersWidthArray[k]); // TODO
+							currentElementK = roundingTwoNumbersAfterComma(squareNumbersWidthArray[k]);
 							roundedSquareNumbersWidthArray.push(currentElementK);
-							// console.log(currentElementK);
 					}
-					// console.log('THIS : ' + roundedSquareNumbersWidthArray); // TODO
 
 					for (var kk = 0; kk < squareNumbersLengthArray.length; kk++)
 					{
-							currentElementKk = roundingTwoNumbersAfterComma(squareNumbersLengthArray[kk]);  // TODO
+							currentElementKk = roundingTwoNumbersAfterComma(squareNumbersLengthArray[kk]);
 							roundedSquareNumbersLengthArray.push(currentElementKk);
 					}
-					// console.log('THAT ' + roundedSquareNumbersLengthArray);  // TODO
 
 					for (var l = 0; l < squareNumbersLengthArray.length; l++)
 					{
@@ -152,9 +146,6 @@
 
 				var indexLength = 0;
 				var indexWidth = 0;
-
-				console.log(roundedSquareNumbersLengthArray);
-				console.log(roundedSquareNumbersWidthArray);
 
 				if (needAnotherTurn) {
 					indexLength = roundedSquareNumbersLengthArray.indexOf(commonValues[0]) + 1;
