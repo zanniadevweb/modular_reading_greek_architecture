@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
 	</head>
 		<h1>Calculateur de modules pour l'architecture grecque (Work in Progress)</h1>
-		<h3> Exemples d'unités de mesures antiques :</h3>
+		<h3> Exemples d'unités de mesures antiques :</h3> (Coudée/cubit punique = 0.516 m ; 7 pieds romain = 4 cubit punique ; 1 coudée romaine = 1.5 pied romain ; Coudée royale égyptienne (datation ?) : 0.5245 m)
 
 		<table style="border: 1px solid black">
 		  <tr>
@@ -14,20 +14,30 @@
 		    <th>Type</th>
 		    <th>Valeur moyenne (m)</th>
 		  </tr>
-		  <tr>
-		    <td>Punique</td>
-		    <td>Coudée / Cubit</td>
-		    <td>0.516</td>
-		  </tr>
-		  <tr>
-		    <td>Punique</td>
-		    <td>Pied</td>
-		    <td>0.3436</td>
-		  </tr>
 			<tr>
 				<td>Romain</td>
 				<td>Pied</td>
-				<td>0.295</td>
+				<td>0.2950</td>
+			</tr>
+		  <tr>
+		    <td>Samos</td>
+		    <td>Pied</td>
+		    <td>0.3040</td>
+		  </tr>
+			<tr>
+				<td>Dorique</td>
+				<td>Pied</td>
+				<td>0.3270</td>
+			</tr>
+			<tr>
+				<td>Punique (Leptis Magna)</td>
+				<td>Pied</td>
+				<td>0.3436</td>
+			</tr>
+			<tr>
+				<td>Ionique</td>
+				<td>Pied</td>
+				<td>0.3490</td>
 			</tr>
 		</table>
 
@@ -36,14 +46,17 @@
 		</br></br>
 		<button onclick="calculateModularity()">GENERER CALCUL MODULES</button>
 		</br></br>
-		<h2>Résultat :</h2> <span id="spanResult"><h3>...</h3></span></br></br>
+		<h2>Résultat :</h2>
+		<span id="errorMessage" style="font-weight: bold;"><h3></h3></span>
+		<span id="spanResult"><h3>...</h3></span></br></br>
+		<span id="detailCalculation"><h3></h3></span></br></br>
+		<span id="moreDetailCalculationLength"><h3></h3></span></br></br>
+		<span id="moreDetailCalculationWidth"><h3></h3></span></br></br>
 		<span id="summary"><h3></h3></span>
 
 		</br></br>
 		<h2> Remplir les champs ci-dessous avant de cliquer sur "GENERER CALCUL MODULES" :</h2>
 		<span id="spanSaisir"><h3>Référence principale :</h3></span>
-
-				<span id="errorMessage" style="font-weight: bold;"><h3></h3></span></br>
 
 				Longueur édifice : <input type="text" id="inputLength" placeholder="8.40" size="100" title="Type in a length/height">
 				</br>
@@ -59,8 +72,11 @@
 			function calculateModularity()
 			{
 			  var textLength = document.getElementById("inputLength").value; // 8.40
+				// textLength = 8.40;
 				var textWidth = document.getElementById("inputWidth").value; // 4.60
+				// textWidth = 4.60;
 				var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
+				// textUnitValue = 0.3436;
 				var feetUnitLengthCount = Math.round(textLength/textUnitValue);
 				var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
 
@@ -68,6 +84,9 @@
 				{
 					writeErrorMessage("ATTENTION : Tous les champs doivent être remplis avant calcul");
 					writeResultMessage('');
+					writeDetailCalculation('');
+					writeMoreDetailCalculationLength('');
+					writeMoreDetailCalculationWidth('');
 					writeSummaryMessage('');
 				} else {
 					writeErrorMessage('');
@@ -80,19 +99,54 @@
 					var modulo1 = (feetUnitLengthCount / numberOfSquareByBuildingSide[0]).toFixed(1);
 					var modulo2 = (feetUnitWidthCount / numberOfSquareByBuildingSide[1]).toFixed(1);
 
+
+					// ----------------------------------------------------------
+					var besoinAutreTour = numberOfSquareByBuildingSide[2];
+					var ratioLongueurTableau = [];
+					var ratioLargeurTableau = [];
+					if (besoinAutreTour)
+					{
+						ratioLongueurTableau = numberOfSquareByBuildingSide[3];
+						ratioLargeurTableau = numberOfSquareByBuildingSide[4];
+					} else {
+						ratioLongueurTableau = numberOfSquareByBuildingSide[5];
+						ratioLargeurTableau = numberOfSquareByBuildingSide[6];
+					}
+					// ----------------------------------------------------------
+
 					writeResultMessage(
-						"Nombre de pieds / longueur = " + feetUnitLengthCount + " ; "
-					+ "Nombre de pieds / largeur = " + feetUnitWidthCount + " ; "
-					+ "Ratio arrondi (1 chiffre) longueur / largeur = " + roundedRatioLengthWidth + " ; "
-					+ "Fraction du ratio longueur / largeur = " + fractionFromFloat + " ; "
-					+ "Longueur et largeur nombre de cases de la grille = " + numberOfSquareByBuildingSide.join(" & ") + " ; "
-				  + "Valeur d'un module = " + modulo1 + " = " + modulo2 + " ; "
+						"DONNEES : "
+					+	"NLO = Nombre pieds / longueur = " + feetUnitLengthCount + " ; "
+					+ "NLA = Nombre pieds / largeur = " + feetUnitWidthCount + " ; "
+					+ "RATL = Ratio arrondi (1 chiffre) longueur / largeur = " + roundedRatioLengthWidth + " ; "
+					+ "FLL = Fraction ratio longueur / largeur = " + fractionFromFloat + " ; "
+					+ "Longueur & largeur nombre de cases de la grille = " + numberOfSquareByBuildingSide[0] + " & " + numberOfSquareByBuildingSide[1] + " ; "
+				  + "Valeur d'un module arrondi (1 chiffre) : M1 = " + modulo1 + " (LONGUEUR) & M2 = " + modulo2 + " (LARGEUR) ; "
+					);
+
+					writeDetailCalculation(
+						"DETAIL CALCULS : "
+					+	"NLO = Arrondi(" + textLength + " / " + textUnitValue + ") ; "
+					+	"NLA = Arrondi(" + textWidth + " / " + textUnitValue + ") ; "
+					+ "RATL = Arrondi(" + textLength + " / " + textWidth + ") ; "
+					+ "FLL = Fraction(" + roundedRatioLengthWidth + ") ; "
+					+ "M1 = NLO / Nombre cases pour Longueur = " + feetUnitLengthCount + " / " +  numberOfSquareByBuildingSide[0] +  ") ; "
+					+ "M2 = NLA / Nombre cases pour Largeur = " + feetUnitWidthCount + " / " + numberOfSquareByBuildingSide[1] +  ")"
+					);
+
+					writeMoreDetailCalculationLength(
+						"Longueur divisée par valeurs [1-100] : " + ratioLongueurTableau.join(", ")
+					);
+
+					writeMoreDetailCalculationWidth(
+						"Largeur divisée par valeurs [1-100] : " + ratioLargeurTableau.join(", ")
 					);
 
 					writeSummaryMessage(
-						"BILAN : " + feetUnitLengthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[0] + ' CASES '
-					+ "et : " + feetUnitWidthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES' + " ; "
-					+ "pour UN MODULE DE : " + modulo1 + ' = ' + modulo2 + ' PIEDS PAR CASE' + " ; "
+						"BILAN : "
+					+ feetUnitLengthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[0] + ' CASES (LONGUEUR) '
+					+ "et : " + feetUnitWidthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES (LARGEUR)' + " ; "
+					+ "pour UN MODULE DE : " + modulo1 + ' (LONGUEUR) = ' + modulo2 + ' (LARGEUR) PIEDS PAR CASE' + " ; "
 					);
 				}
 			}
@@ -100,6 +154,21 @@
 			function writeResultMessage(result)
 			{
 				document.getElementById("spanResult").textContent = result;
+			}
+
+			function writeDetailCalculation(detail)
+			{
+				document.getElementById("detailCalculation").textContent = detail;
+			}
+
+			function writeMoreDetailCalculationLength(moreDetailLength)
+			{
+				document.getElementById("moreDetailCalculationLength").textContent = moreDetailLength;
+			}
+
+			function writeMoreDetailCalculationWidth(moreDetailWidth)
+			{
+				document.getElementById("moreDetailCalculationWidth").textContent = moreDetailWidth;
 			}
 
 			function writeSummaryMessage(summary)
@@ -192,7 +261,7 @@
 					indexWidth = i
 				}
 
-				return [indexLength, indexWidth];
+				return [indexLength, indexWidth, needAnotherTurn, roundedSquareNumbersLengthArray, roundedSquareNumbersWidthArray, squareNumbersLengthArray, squareNumbersWidthArray];
 			}
 
 			function roundingTwoNumbersAfterComma(currentNumber)
