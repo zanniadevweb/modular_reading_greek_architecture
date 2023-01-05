@@ -268,7 +268,12 @@
 			{
 				var strNumber = String(currentNumber).slice(0, 4);
 				var realNumber = Number(strNumber);
-				return realNumber;
+				return round(realNumber, 1);
+			}
+				
+			function round(value, precision) {
+			    var multiplier = Math.pow(10, precision || 0);
+			    return Math.round(value * multiplier) / multiplier;
 			}
 
 			function calculateFractionFromFloat(ratioLengthWidth)
