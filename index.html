@@ -5,6 +5,26 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
 	</head>
+	<style>
+		.grid-container {
+		  display: grid;
+		  grid-template-columns: auto auto auto;
+		  background-color: #2196F3;
+		  padding: 10px;
+		}
+		/* padding-bottom: 100%;
+		display: block; */
+		.grid-container > div::before {
+		  content: "";
+		}
+		.grid-item {
+		  background-color: rgba(255, 255, 255, 0.8);
+		  border: 1px solid rgba(0, 0, 0, 0.8);
+		  padding: 20px;
+		  font-size: 30px;
+		  text-align: center;
+		}
+	</style>
 		<h1>Calculateur de modules pour l'architecture grecque (Work in Progress)</h1>
 		<h3> Exemples d'unités de mesures antiques :</h3> (Coudée/cubit punique = 0.516 m ; 7 pieds romain = 4 cubit punique ; 1 coudée romaine = 1.5 pied romain ; Coudée royale égyptienne (datation ?) : 0.5245 m)
 
@@ -67,16 +87,18 @@
 
 		</br></br>
 
+		<div class="grid-container" id="grid-container" style="width: 25%; height: 25%;"><img id="img" src="temple_b_selinus.png"></div>
+
 			<script>
 
 			function calculateModularity()
 			{
 			  var textLength = document.getElementById("inputLength").value; // 8.40
-				// textLength = 8.40;
+				textLength = 8.40;
 				var textWidth = document.getElementById("inputWidth").value; // 4.60
-				// textWidth = 4.60;
+				textWidth = 4.60;
 				var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
-				// textUnitValue = 0.3436;
+				textUnitValue = 0.3436;
 				var feetUnitLengthCount = Math.round(textLength/textUnitValue);
 				var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
 
@@ -148,6 +170,8 @@
 					+ "et : " + feetUnitWidthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES (LARGEUR)' + " ; "
 					+ "pour UN MODULE DE : " + modulo1 + ' (LONGUEUR) = ' + modulo2 + ' (LARGEUR) PIEDS PAR CASE' + " ; "
 					);
+
+					createGridModulo(numberOfSquareByBuildingSide[0], numberOfSquareByBuildingSide[1]);
 				}
 			}
 
@@ -270,7 +294,7 @@
 				var realNumber = Number(strNumber);
 				return round(realNumber, 1);
 			}
-				
+
 			function round(value, precision) {
 			    var multiplier = Math.pow(10, precision || 0);
 			    return Math.round(value * multiplier) / multiplier;
@@ -296,6 +320,29 @@
 
 				var normalizedFraction = (Math.floor(numerator) + '/' + Math.floor(denominator));
 				return normalizedFraction;
+			}
+
+			function createGridModulo(numberModuloLength, numberModuloWidth)
+			{
+				var numberModulo = numberModuloLength*numberModuloWidth;
+
+				var img_default_copy =  document.getElementById('img');
+				var table = document.getElementById('grid-container');
+				table.innerHTML = "";
+				squares = [];
+				var square = document.createElement('div');
+				square.classList.add("grid-item");
+
+				for (var m = 1; m < numberModulo; m++) {
+						var square = document.createElement('div');
+						square.classList.add("grid-item");
+						squares.push(square);
+				}
+
+				// table.appendChild(img_default_copy);
+				for (var n = 1; n < squares.length; n++) {
+					table.appendChild(squares[n]);
+				}
 			}
 
 		</script>
