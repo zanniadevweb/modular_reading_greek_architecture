@@ -333,14 +333,14 @@
 				var square = document.createElement('div');
 				square.classList.add("grid-item");
 
-				for (var m = 1; m < numberModulo; m++) {
+				for (var m = 1; m <= numberModulo; m++) {
 						var square = document.createElement('div');
 						square.classList.add("grid-item");
 						squares.push(square);
 				}
 
 				// table.appendChild(img_default_copy);
-				for (var n = 1; n <= squares.length; n++) {
+				for (var n = 1; n < squares.length; n++) {
 					table.appendChild(squares[n]);
 				}
 			}
