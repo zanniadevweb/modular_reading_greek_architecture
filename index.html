@@ -109,13 +109,13 @@
 			function calculateModularity()
 			{
 			  var textLength = document.getElementById("inputLength").value; // 8.40
-				// textLength = 24;
+				textLength = 24;
 
 				var textWidth = document.getElementById("inputWidth").value; // 4.60
-				// textWidth = 9.60;
+				 textWidth = 9.60;
 
 				var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
-				// textUnitValue = 0.3436;
+				textUnitValue = 0.3436;
 
 				var selectRounding = document.getElementById("selectRounding").value; // 1
 
@@ -142,6 +142,7 @@
 					var roundedRatioLengthWidth = ratioLengthWidth.toFixed(selectRounding);
 					var fractionFromFloat = calculateFractionFromFloat(roundedRatioLengthWidth);
 					var numberOfSquareByBuildingSide = calculateNumberOfSquareByBuildingSide(textLength, textWidth, selectRounding, selectSizeModulo);
+					var commonValueLengthWidth = numberOfSquareByBuildingSide[4];
 
 					var modulo1 = (feetUnitLengthCount / numberOfSquareByBuildingSide[0]).toFixed(selectRounding);
 					var modulo2 = (feetUnitWidthCount / numberOfSquareByBuildingSide[1]).toFixed(selectRounding);
@@ -174,13 +175,15 @@
 					+ "M2 = NLA / Nombre cases pour Largeur = " + feetUnitWidthCount + " / " + numberOfSquareByBuildingSide[1] +  ")"
 					);
 
-					writeMoreDetailCalculationLength(
-						"Longueur / valeurs [1-40] (Toujours arrondi au 10ème) : " + ratioLongueurTableau.join(", ")
-					);
+					var removeBeforeLength = removeAllAfterArrayValue(ratioLongueurTableau, commonValueLengthWidth).join(", ");
+					var removeAfterLength = removeAllBeforeArrayValue(ratioLongueurTableau, commonValueLengthWidth).slice(1).join(", ");
 
-					writeMoreDetailCalculationWidth(
-						"Largeur / valeurs [1-40] (Toujours arrondi au 10ème) : " + ratioLargeurTableau.join(", ")
-					);
+					writeMoreDetailCalculationLength(removeBeforeLength, commonValueLengthWidth, removeAfterLength);
+
+					var removeBeforeWidth = removeAllAfterArrayValue(ratioLargeurTableau, commonValueLengthWidth).join(", ");
+					var removeAfterWidth = removeAllBeforeArrayValue(ratioLargeurTableau, commonValueLengthWidth).slice(1).join(", ");
+
+					writeMoreDetailCalculationWidth(removeBeforeWidth, commonValueLengthWidth, removeAfterWidth);
 
 					writeSummaryMessage(
 						"BILAN : "
@@ -193,6 +196,19 @@
 				}
 			}
 
+			function removeAllBeforeArrayValue(wholeArray, number) {
+			  var position = wholeArray.indexOf(number);
+			  if(position === -1) // not found
+			    return wholeArray;
+			  return wholeArray.slice(position);
+			}
+
+			function removeAllAfterArrayValue(wholeArray, number) {
+				var arrayBefore = removeAllBeforeArrayValue(wholeArray, number);
+				var differenceTwoArrays = wholeArray.filter(x => !arrayBefore.includes(x));
+				return differenceTwoArrays;
+			}
+
 			function writeResultMessage(result)
 			{
 				document.getElementById("spanResult").textContent = result;
@@ -203,14 +219,16 @@
 				document.getElementById("detailCalculation").textContent = detail;
 			}
 
-			function writeMoreDetailCalculationLength(moreDetailLength)
+			function writeMoreDetailCalculationLength(removeBeforeLength, commonValueLengthWidth, removeAfterLength)
 			{
-				document.getElementById("moreDetailCalculationLength").textContent = moreDetailLength;
+				var  coloredRatioLength = document.getElementById("moreDetailCalculationLength");
+				coloredRatioLength.innerHTML = "Longueur / valeurs [1-40] (Toujours arrondi au 10ème) : " + removeBeforeLength +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" + ", " + removeAfterLength;
 			}
 
-			function writeMoreDetailCalculationWidth(moreDetailWidth)
+			function writeMoreDetailCalculationWidth(removeBeforeWidth, commonValueLengthWidth, removeAfterWidth)
 			{
-				document.getElementById("moreDetailCalculationWidth").textContent = moreDetailWidth;
+				var  coloredRatioWidth = document.getElementById("moreDetailCalculationWidth");
+				coloredRatioWidth.innerHTML = "Largeur / valeurs [1-40] (Toujours arrondi au 10ème) : " + removeBeforeWidth +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" +  ", "+ removeAfterWidth;
 			}
 
 			function writeSummaryMessage(summary)
@@ -281,7 +299,7 @@
 					indexWidth = i
 				}
 
-				return [indexLength, indexWidth, roundedSquareNumbersLengthArray, roundedSquareNumbersWidthArray];
+				return [indexLength, indexWidth, roundedSquareNumbersLengthArray, roundedSquareNumbersWidthArray, commonValues[0]];
 			}
 
 			function roundingOneNumberAfterComma(currentNumber, selectRounding)
