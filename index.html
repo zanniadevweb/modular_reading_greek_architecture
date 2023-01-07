@@ -25,6 +25,12 @@
 		  font-size: 30px;
 		  text-align: center;
 		}
+		.gridCanvas {
+			position: relative !important;
+			border: lightgrey 1px solid;
+			border-radius: 5px;
+			box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+		}
 	</style>
 		<h1>Calculateur de modules pour l'architecture grecque (Work in Progress)</h1>
 		<h3> Exemples d'unités de mesures antiques :</h3> (Coudée/cubit punique = 0.516 m ; 7 pieds romain = 4 cubit punique ; 1 coudée romaine = 1.5 pied romain ; Coudée royale égyptienne (datation ?) : 0.5245 m)
@@ -63,6 +69,8 @@
 		</table>
 
 		</br></br>
+
+		<canvas class="gridCanvas" id="canvas" height="590" width="590"></canvas>
 
 		</br></br>
 		<button onclick="calculateModularity()">GENERER CALCUL MODULES</button>
@@ -106,6 +114,13 @@
 		</br></br>
 
 			<script>
+
+			var resultSquareHeight = 7; // Nombre de cases en hauteur
+			var resultSquareWidth = 4; // Nombre de cases en largeur
+			var numberColumns = 4;
+			var cardinalSide = 'south';
+			var isPeripteral = false;
+			draw(resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide, isPeripteral);
 
 			function calculateModularity()
 			{
@@ -370,10 +385,180 @@
 						square.classList.add("grid-item");
 						squares.push(square);
 				}
-;
+
 				for (var n = 0; n < squares.length; n++) {
 					table.appendChild(squares[n]);
 				}
+			}
+
+			function draw(resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide, isPeripteral) {
+		    const canvas = document.querySelector('#canvas');
+
+		    if (!canvas.getContext) {
+		        return;
+		    }
+		    const ctx = canvas.getContext('2d');
+
+				var width = 900
+				var height = 900
+				drawGridOnCanvas(ctx, width, height);
+
+		    ctx.strokeStyle = 'red';
+		    ctx.lineWidth = 2.5;
+
+				var x_StartingPoint = 58;
+				var y_StartingPoint = 58;
+				var oneSquareSize = 28;
+
+		    drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth);
+
+				if (numberColumns > 0)
+				{
+						drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide, isPeripteral)
+				}
+			}
+
+			function drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide, isPeripteral)
+			{
+				if (isPeripteral)
+				{
+					drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
+				} else {
+					drawOneSideColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide)
+				}
+
+			}
+
+			function drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
+			{
+				// DRAW SHORT SIDES
+				for (var col = 1 ; col <= numberColumns ; col++)
+				{
+					// DRAW NORTH
+					ctx.beginPath();
+					ctx.arc(
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						y_StartingPoint + oneSquareSize - (oneSquareSize/2),
+						oneSquareSize/4,
+						0,
+						2 * Math.PI
+					);
+					ctx.stroke();
+
+					// DRAW SOUTH
+					ctx.beginPath();
+					ctx.arc(
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
+						oneSquareSize/4,
+						0,
+						2 * Math.PI
+					);
+					ctx.stroke();
+				}
+				// DRAW LONG SIDES
+				for (var col = 1 ; col <= (numberColumns*2)-1 ; col++)
+				{
+					// DRAW WEST
+					ctx.beginPath();
+					ctx.arc(
+						y_StartingPoint + oneSquareSize - (oneSquareSize/2),
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						oneSquareSize/4,
+						0,
+						2 * Math.PI
+					);
+					ctx.stroke();
+
+					// DRAW EAST
+					ctx.beginPath();
+					ctx.arc(
+						y_StartingPoint + oneSquareSize*resultSquareWidth - (oneSquareSize/2),
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						oneSquareSize/4,
+						0,
+						2 * Math.PI
+					);
+					ctx.stroke();
+				}
+			}
+
+			function drawOneSideColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide)
+			{
+				for (var col = 1 ; col <= numberColumns ; col++)
+				{
+					if (cardinalSide == 'south')
+					{
+						ctx.beginPath();
+						ctx.arc(
+							x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+							y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
+							oneSquareSize/4,
+							0,
+							2 * Math.PI
+						);
+						ctx.stroke();
+					} else if (cardinalSide == 'north') {
+						ctx.beginPath();
+						ctx.arc(
+							x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+							y_StartingPoint + oneSquareSize - (oneSquareSize/2),
+							oneSquareSize/4,
+							0,
+							2 * Math.PI
+						);
+						ctx.stroke();
+					}
+				}
+			}
+
+			function drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth)
+			{
+				ctx.beginPath();
+				ctx.moveTo(x_StartingPoint, y_StartingPoint);
+				ctx.lineTo(x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareHeight);
+				ctx.stroke();
+
+				ctx.beginPath();
+				ctx.moveTo(x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareHeight);
+				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareHeight);
+				ctx.stroke();
+
+				ctx.beginPath();
+				ctx.moveTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint);
+				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareHeight);
+				ctx.stroke();
+
+				ctx.beginPath();
+				ctx.moveTo(x_StartingPoint, y_StartingPoint);
+				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint);
+				ctx.stroke();
+			}
+
+			function drawGridOnCanvas(ctx, width, height)
+			{
+				let s = 28
+				let nX = Math.floor(width / s) - 2
+				let nY = Math.floor(height / s) - 2
+				let pX = width - nX * s
+				let pY = height - nY * s
+
+				let pL = Math.ceil(pX / 2) - 0.5
+				let pT = Math.ceil(pY / 2) - 0.5
+				let pR = width - nX * s - pL
+				let pB = height - nY * s - pT
+
+				ctx.strokeStyle = 'lightgrey'
+				ctx.beginPath()
+				for (var x = pL; x <= width - pR; x += s) {
+					ctx.moveTo(x, pT)
+					ctx.lineTo(x, height - pB)
+				}
+				for (var y = pT; y <= height - pB; y += s) {
+					ctx.moveTo(pL, y)
+					ctx.lineTo(width - pR, y)
+				}
+				ctx.stroke()
 			}
 
 		</script>
