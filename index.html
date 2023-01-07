@@ -124,6 +124,7 @@
 
 				var feetUnitLengthCount = Math.round(textLength/textUnitValue);
 				var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
+				var differenceLengthWidth = textLength - textWidth;
 
 				if (!textLength || !textWidth || !textUnitValue)
 				{
@@ -133,7 +134,7 @@
 					writeMoreDetailCalculationLength(false);
 					writeMoreDetailCalculationWidth(false);
 					writeSummaryMessage('');
-				} else if (textWidth > textLength)
+				} else if (differenceLengthWidth < 0)
 				{
 					writeErrorMessage("ATTENTION : La longueur doit être supérieure à la largeur");
 					writeResultMessage('');
