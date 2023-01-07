@@ -256,18 +256,18 @@
 						roundedSquareNumbersLengthArray.push(currentElementKk);
 				}
 
+				var indexLength = 0;
+				var indexWidth = 0;
 				for (var l = 0; l < squareNumbersLengthArray.length; l++)
 				{
 						currentElementL = roundingOneNumberAfterComma(squareNumbersLengthArray[l], selectRounding);
-						if (roundedSquareNumbersWidthArray.includes(currentElementL) && l >= selectSizeModulo)
+						indexCurrentWidth = roundedSquareNumbersWidthArray.indexOf(currentElementL) + 1;
+						if (roundedSquareNumbersWidthArray.includes(currentElementL) && indexCurrentWidth >= selectSizeModulo)
 						{
 								commonValues.push(currentElementL);
 								break;
 						}
 				}
-
-				var indexLength = 0;
-				var indexWidth = 0;
 
 				indexLength = roundedSquareNumbersLengthArray.indexOf(commonValues[0]) + 1;
 				indexWidth = roundedSquareNumbersWidthArray.indexOf(commonValues[0]) + 1;
