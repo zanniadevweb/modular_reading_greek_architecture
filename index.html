@@ -7,18 +7,16 @@
 	</head>
 	<style>
 		.grid-container {
-		  display: grid;
-		  /* grid-template-columns: auto auto auto;*/
-			grid-auto-rows: 1fr
-		  padding: 10px;
+			display: grid;
+			grid-auto-rows: 1fr;
 			background: url('temple_b_selinus.png');
-			background-size: cover;
+			background-size: contain;
 			background-repeat: no-repeat;
 		}
-		/* padding-bottom: 100%;
-		display: block; */
 		.grid-container > div::before {
 		  content: "";
+			display: block;
+		  padding-top: 100%;
 		}
 		.grid-item {
 		  background-color: rgba(255, 255, 255, 0.8);
@@ -98,6 +96,7 @@
 																		<option value="4">4</option>
 																		<option value="6">6</option>
 																	</select>
+				</br>
 
 		</br></br>
 
@@ -109,17 +108,17 @@
 			function calculateModularity()
 			{
 			  var textLength = document.getElementById("inputLength").value; // 8.40
-				textLength = 24;
+				// textLength = 24;
 
 				var textWidth = document.getElementById("inputWidth").value; // 4.60
-				 textWidth = 9.60;
+				// textWidth = 9.60;
 
 				var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
-				textUnitValue = 0.3436;
+				// textUnitValue = 0.3436;
 
 				var selectRounding = document.getElementById("selectRounding").value; // 1
 
-				var selectSizeModulo = document.getElementById("selectSizeModulo").value; // Grand
+				var selectSizeModulo = document.getElementById("selectSizeModulo").value; // 2
 
 				var feetUnitLengthCount = Math.round(textLength/textUnitValue);
 				var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
@@ -129,8 +128,8 @@
 					writeErrorMessage("ATTENTION : Tous les champs doivent être remplis avant calcul");
 					writeResultMessage('');
 					writeDetailCalculation('');
-					writeMoreDetailCalculationLength('');
-					writeMoreDetailCalculationWidth('');
+					writeMoreDetailCalculationLength(false);
+					writeMoreDetailCalculationWidth(false);
 					writeSummaryMessage('');
 				} else if (textWidth > textLength)
 				{
@@ -178,12 +177,12 @@
 					var removeBeforeLength = removeAllAfterArrayValue(ratioLongueurTableau, commonValueLengthWidth).join(", ");
 					var removeAfterLength = removeAllBeforeArrayValue(ratioLongueurTableau, commonValueLengthWidth).slice(1).join(", ");
 
-					writeMoreDetailCalculationLength(removeBeforeLength, commonValueLengthWidth, removeAfterLength);
+					writeMoreDetailCalculationLength(true, removeBeforeLength, commonValueLengthWidth, removeAfterLength);
 
 					var removeBeforeWidth = removeAllAfterArrayValue(ratioLargeurTableau, commonValueLengthWidth).join(", ");
 					var removeAfterWidth = removeAllBeforeArrayValue(ratioLargeurTableau, commonValueLengthWidth).slice(1).join(", ");
 
-					writeMoreDetailCalculationWidth(removeBeforeWidth, commonValueLengthWidth, removeAfterWidth);
+					writeMoreDetailCalculationWidth(true, removeBeforeWidth, commonValueLengthWidth, removeAfterWidth);
 
 					writeSummaryMessage(
 						"BILAN : "
@@ -219,16 +218,24 @@
 				document.getElementById("detailCalculation").textContent = detail;
 			}
 
-			function writeMoreDetailCalculationLength(removeBeforeLength, commonValueLengthWidth, removeAfterLength)
+			function writeMoreDetailCalculationLength(isFilled, removeBeforeLength, commonValueLengthWidth, removeAfterLength)
 			{
 				var  coloredRatioLength = document.getElementById("moreDetailCalculationLength");
-				coloredRatioLength.innerHTML = "Longueur / valeurs [1-40] (Toujours arrondi au 10ème) : " + removeBeforeLength +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" + ", " + removeAfterLength;
+				if (isFilled) {
+					coloredRatioLength.innerHTML = "Longueur / valeurs [1-40] (Toujours arrondi au 10ème) : " + removeBeforeLength +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" + ", " + removeAfterLength;
+				} else{
+					coloredRatioLength.innerHTML = '';
+				}
 			}
 
-			function writeMoreDetailCalculationWidth(removeBeforeWidth, commonValueLengthWidth, removeAfterWidth)
+			function writeMoreDetailCalculationWidth(isFilled, removeBeforeWidth, commonValueLengthWidth, removeAfterWidth)
 			{
 				var  coloredRatioWidth = document.getElementById("moreDetailCalculationWidth");
-				coloredRatioWidth.innerHTML = "Largeur / valeurs [1-40] (Toujours arrondi au 10ème) : " + removeBeforeWidth +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" +  ", "+ removeAfterWidth;
+				if (isFilled) {
+					coloredRatioWidth.innerHTML = "Largeur / valeurs [1-40] (Toujours arrondi au 10ème) : " + removeBeforeWidth +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" +  ", "+ removeAfterWidth;
+				} else {
+					coloredRatioWidth.innerHTML = '';
+				}
 			}
 
 			function writeSummaryMessage(summary)
@@ -344,7 +351,7 @@
 				var table = document.getElementById('grid-container');
 				var gridTemplateColumns = 'grid-template-columns';
 				table.style.gridTemplateColumns = "repeat("+numberModuloWidth+", 1fr)";
-				table.style.background = "url('temple_b_selinus.png') no-repeat center center";
+				table.style.background = "url('temple_b_selinus.png') contain";
 				table.innerHTML = "";
 				squares = [];
 				var square = document.createElement('div');
