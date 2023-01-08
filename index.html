@@ -115,9 +115,14 @@
 																		<option value="10">12</option>
 																	</select>
 			</br>
-			Est périptère : <select id="selectPeripteral">
-																	<option value="true">Oui</option>
-																	<option value="false">Non</option>
+			Type de temple : <select id="selectTypeTemple">
+																	<option value="1">Périptère (2n-1)</option>
+																	<option value="2">Périptère (2n)</option>
+																	<option value="3">Périptère (2n+1)</option>
+																	<option value="4">Amphiprostyle</option>
+																	<option value="5">Colonnade Nord</option>
+																	<option value="6">Colonnade Sud</option>
+																	<option value="7">Aptère</option>
 																</select>
 
 		</br></br>
@@ -143,7 +148,7 @@
 
 				var selectNumberColumns = document.getElementById("selectNumberColumns").value;// 4
 
-				var selectPeripteral = document.getElementById("selectPeripteral").value;// Non
+				var selectTypeTemple = document.getElementById("selectTypeTemple").value;// Non
 
 				var feetUnitLengthCount = Math.round(textLength/textUnitValue);
 				var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
@@ -227,9 +232,7 @@
 					var resultSquareHeight = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
 					var resultSquareWidth = numberOfSquareByBuildingSide[1]; // Nombre de cases en largeur
 					var numberColumns = 4;
-					var cardinalSide = 'south';
-					var isPeripteral = false;
-					draw(resultSquareHeight, resultSquareWidth, selectNumberColumns, cardinalSide, selectPeripteral);
+					draw(resultSquareHeight, resultSquareWidth, selectNumberColumns, selectTypeTemple);
 				}
 			}
 
@@ -406,13 +409,26 @@
 				}
 			}
 
-			function draw(resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide, isPeripteralBuilding) {
-				isPeripteral = false;
-				if (isPeripteralBuilding == 'true') {
-						isPeripteral = true;
-				} else {
-					isPeripteral = false;
+			function draw(resultSquareHeight, resultSquareWidth, numberColumns, selectTypeTemple) {
+
+				var typeTemple = '';
+
+				if (selectTypeTemple == 1) {
+					typeTemple = 'Périptère (2n-1)';
+				} else if (selectTypeTemple == 2) {
+					typeTemple = 'Périptère (2n)';
+				} else if (selectTypeTemple == 3) {
+					typeTemple = 'Périptère (2n+1)';
+				} else if (selectTypeTemple == 4) {
+					typeTemple = 'Amphiprostyle';
+				} else if (selectTypeTemple == 5) {
+					typeTemple = 'Colonnade Nord';
+				} else if (selectTypeTemple == 6) {
+					typeTemple = 'Colonnade Sud';
+				} else if (selectTypeTemple == 6) {
+					typeTemple = 'Aptère';
 				}
+
 		    const canvas = document.querySelector('#canvas');
 
 		    if (!canvas.getContext) {
@@ -434,32 +450,60 @@
 
 		    drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth);
 
-				if (numberColumns > 0)
+				if (numberColumns > 0 || typeTemple !== 'Aptère')
 				{
-						drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide, isPeripteral)
+						drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, typeTemple)
 				}
 			}
 
-			function drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide, isPeripteral)
+			function drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, typeTemple)
 			{
-				if (isPeripteral)
+				if (typeTemple == 'Périptère (2n-1)' || typeTemple == 'Périptère (2n)' || typeTemple == 'Périptère (2n+1)')
 				{
-					drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
-				} else {
+					var peripterType = '';
+					if (typeTemple == 'Périptère (2n-1)') {
+						peripterType = '2n-1';
+					} else if (typeTemple == 'Périptère (2n)') {
+						peripterType = '2n';
+					} else if (typeTemple == 'Périptère (2n+1)') {
+						peripterType = '2n+1';
+					}
+					drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, peripterType)
+				}
+				else if (typeTemple == 'Colonnade Nord' || typeTemple == 'Colonnade Sud')
+				{
+					var cardinalSide = '';
+					if (typeTemple == 'Colonnade Nord') {
+						cardinalSide = 'north'
+					} else if (typeTemple == 'Colonnade Sud') {
+						cardinalSide = 'south'
+					}
 					drawOneSideColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide)
 				}
-
+				else if (typeTemple == 'Amphiprostyle')
+				{
+					drawTwoSidesColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
+				}
 			}
 
-			function drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
+			function drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, peripterType)
 			{
+				var ruleLongSides = 0
+				if (peripterType == '2n-1') {
+					ruleLongSides = (numberColumns*2)-1;
+				} else if (peripterType == '2n') {
+					ruleLongSides = (numberColumns*2);
+				} else if (peripterType == '2n+1') {
+					ruleLongSides = (numberColumns*2)+1;
+				}
+
 				// DRAW SHORT SIDES
-				for (var col = 1 ; col <= numberColumns ; col++)
+				for (var colShort = 1 ; colShort <= numberColumns ; colShort++)
 				{
 					// DRAW NORTH
 					ctx.beginPath();
 					ctx.arc(
-						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colShort*2,
 						y_StartingPoint + oneSquareSize - (oneSquareSize/2),
 						oneSquareSize/4,
 						0,
@@ -470,7 +514,7 @@
 					// DRAW SOUTH
 					ctx.beginPath();
 					ctx.arc(
-						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colShort*2,
 						y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
 						oneSquareSize/4,
 						0,
@@ -479,13 +523,13 @@
 					ctx.stroke();
 				}
 				// DRAW LONG SIDES
-				for (var col = 1 ; col <= (numberColumns*2)-1 ; col++)
+				for (var colLong = 1 ; colLong <= ruleLongSides ; colLong++)
 				{
 					// DRAW WEST
 					ctx.beginPath();
 					ctx.arc(
 						y_StartingPoint + oneSquareSize - (oneSquareSize/2),
-						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colLong*2,
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
@@ -496,7 +540,7 @@
 					ctx.beginPath();
 					ctx.arc(
 						y_StartingPoint + oneSquareSize*resultSquareWidth - (oneSquareSize/2),
-						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colLong*2,
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
@@ -509,18 +553,8 @@
 			{
 				for (var col = 1 ; col <= numberColumns ; col++)
 				{
-					if (cardinalSide == 'south')
+					if (cardinalSide == 'north')
 					{
-						ctx.beginPath();
-						ctx.arc(
-							x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
-							y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
-							oneSquareSize/4,
-							0,
-							2 * Math.PI
-						);
-						ctx.stroke();
-					} else if (cardinalSide == 'north') {
 						ctx.beginPath();
 						ctx.arc(
 							x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
@@ -530,7 +564,42 @@
 							2 * Math.PI
 						);
 						ctx.stroke();
+					} else if (cardinalSide == 'south') {
+						ctx.beginPath();
+						ctx.arc(
+							x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+							y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
+							oneSquareSize/4,
+							0,
+							2 * Math.PI
+						);
+						ctx.stroke();
 					}
+				}
+			}
+
+			function drawTwoSidesColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
+			{
+				for (var col = 1 ; col <= numberColumns ; col++)
+				{
+					ctx.beginPath();
+					ctx.arc(
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						y_StartingPoint + oneSquareSize - (oneSquareSize/2),
+						oneSquareSize/4,
+						0,
+						2 * Math.PI
+					);
+					ctx.stroke();
+					ctx.beginPath();
+					ctx.arc(
+						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
+						y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
+						oneSquareSize/4,
+						0,
+						2 * Math.PI
+					);
+					ctx.stroke();
 				}
 			}
 
