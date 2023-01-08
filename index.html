@@ -134,13 +134,13 @@
 			function calculateModularity()
 			{
 			  var textLength = document.getElementById("inputLength").value; // 8.40
-				textLength = 24;
+				// textLength = 24;
 
 				var textWidth = document.getElementById("inputWidth").value; // 4.60
-				textWidth = 9.60;
+				// textWidth = 9.60;
 
 				var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
-				textUnitValue = 0.3436;
+				// textUnitValue = 0.3436;
 
 				var selectRounding = document.getElementById("selectRounding").value; // 1
 
@@ -232,7 +232,7 @@
 					var resultSquareLength = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
 					var resultSquareWidth = numberOfSquareByBuildingSide[1]; // Nombre de cases en largeur
 
-					var resultSquareHeight = roundedRatioLengthWidth*numberOfSquareByBuildingSide[1]
+					var resultSquareHeight = numberOfSquareByBuildingSide[1]/roundedRatioLengthWidth
 					draw(resultSquareLength, resultSquareWidth, selectNumberColumns, selectTypeTemple, resultSquareHeight);
 				}
 			}
@@ -444,7 +444,7 @@
 				drawGridOnCanvas(ctx, width, height);
 
 		    ctx.strokeStyle = 'red';
-		    ctx.lineWidth = 2.5;
+		    ctx.lineWidth = 2;
 
 				var x_StartingPoint = 58;
 				var y_StartingPoint = 58;
@@ -458,8 +458,10 @@
 				}
 				//  ----------------------------------------------------------------------------------------------------------------------
 
+				console.log(resultSquareLength)
+					console.log(resultSquareHeight)
 				// DESSIN DE LA FACADE
-				drawBaseRectangle(ctx, x_StartingPoint*4.82, y_StartingPoint*4.82, oneSquareSize, resultSquareHeight, resultSquareWidth);
+				drawBaseRectangle(ctx, x_StartingPoint*4.82, y_StartingPoint*4.82, oneSquareSize, -resultSquareHeight, resultSquareWidth);
 				if (numberColumns > 0 || typeTemple !== 'Aptère')
 				{
 						// drawColumnDrums(ctx, x_StartingPoint*4.82, y_StartingPoint*4.82, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, typeTemple)
