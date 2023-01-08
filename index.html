@@ -134,13 +134,13 @@
 			function calculateModularity()
 			{
 			  var textLength = document.getElementById("inputLength").value; // 8.40
-				// textLength = 24;
+				textLength = 24;
 
 				var textWidth = document.getElementById("inputWidth").value; // 4.60
-				// textWidth = 9.60;
+				textWidth = 9.60;
 
 				var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
-				// textUnitValue = 0.3436;
+				textUnitValue = 0.3436;
 
 				var selectRounding = document.getElementById("selectRounding").value; // 1
 
@@ -148,7 +148,7 @@
 
 				var selectNumberColumns = document.getElementById("selectNumberColumns").value;// 4
 
-				var selectTypeTemple = document.getElementById("selectTypeTemple").value;// Non
+				var selectTypeTemple = document.getElementById("selectTypeTemple").value;// Périptère (2n-1)
 
 				var feetUnitLengthCount = Math.round(textLength/textUnitValue);
 				var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
@@ -229,10 +229,11 @@
 
 					createGridModulo(numberOfSquareByBuildingSide[0], numberOfSquareByBuildingSide[1]);
 
-					var resultSquareHeight = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
+					var resultSquareLength = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
 					var resultSquareWidth = numberOfSquareByBuildingSide[1]; // Nombre de cases en largeur
-					var numberColumns = 4;
-					draw(resultSquareHeight, resultSquareWidth, selectNumberColumns, selectTypeTemple);
+
+					var resultSquareHeight = roundedRatioLengthWidth*numberOfSquareByBuildingSide[1]
+					draw(resultSquareLength, resultSquareWidth, selectNumberColumns, selectTypeTemple, resultSquareHeight);
 				}
 			}
 
@@ -409,8 +410,9 @@
 				}
 			}
 
-			function draw(resultSquareHeight, resultSquareWidth, numberColumns, selectTypeTemple) {
+			function draw(resultSquareLength, resultSquareWidth, numberColumns, selectTypeTemple, resultSquareHeight) {
 
+				console.log(resultSquareHeight)
 				var typeTemple = '';
 
 				if (selectTypeTemple == 1) {
@@ -448,15 +450,24 @@
 				var y_StartingPoint = 58;
 				var oneSquareSize = 28;
 
-		    drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth);
-
+				// DESSIN DU PLAN -------------------------------------------------------------------------------------------------------
+		    drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth);
 				if (numberColumns > 0 || typeTemple !== 'Aptère')
 				{
-						drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, typeTemple)
+						drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, typeTemple)
 				}
+				//  ----------------------------------------------------------------------------------------------------------------------
+
+				// DESSIN DE LA FACADE
+				drawBaseRectangle(ctx, x_StartingPoint*4.82, y_StartingPoint*4.82, oneSquareSize, resultSquareHeight, resultSquareWidth);
+				if (numberColumns > 0 || typeTemple !== 'Aptère')
+				{
+						// drawColumnDrums(ctx, x_StartingPoint*4.82, y_StartingPoint*4.82, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, typeTemple)
+				}
+				//  ----------------------------------------------------------------------------------------------------------------------
 			}
 
-			function drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, typeTemple)
+			function drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, typeTemple)
 			{
 				if (typeTemple == 'Périptère (2n-1)' || typeTemple == 'Périptère (2n)' || typeTemple == 'Périptère (2n+1)')
 				{
@@ -468,7 +479,7 @@
 					} else if (typeTemple == 'Périptère (2n+1)') {
 						peripterType = '2n+1';
 					}
-					drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, peripterType)
+					drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, peripterType)
 				}
 				else if (typeTemple == 'Colonnade Nord' || typeTemple == 'Colonnade Sud')
 				{
@@ -478,15 +489,15 @@
 					} else if (typeTemple == 'Colonnade Sud') {
 						cardinalSide = 'south'
 					}
-					drawOneSideColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide)
+					drawOneSideColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, cardinalSide)
 				}
 				else if (typeTemple == 'Amphiprostyle')
 				{
-					drawTwoSidesColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
+					drawTwoSidesColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns)
 				}
 			}
 
-			function drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, peripterType)
+			function drawPeripteralColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, peripterType)
 			{
 				var ruleLongSides = 0
 				if (peripterType == '2n-1') {
@@ -515,7 +526,7 @@
 					ctx.beginPath();
 					ctx.arc(
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colShort*2,
-						y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
+						y_StartingPoint + oneSquareSize*resultSquareLength - (oneSquareSize/2),
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
@@ -549,7 +560,7 @@
 				}
 			}
 
-			function drawOneSideColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns, cardinalSide)
+			function drawOneSideColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, cardinalSide)
 			{
 				for (var col = 1 ; col <= numberColumns ; col++)
 				{
@@ -568,7 +579,7 @@
 						ctx.beginPath();
 						ctx.arc(
 							x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
-							y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
+							y_StartingPoint + oneSquareSize*resultSquareLength - (oneSquareSize/2),
 							oneSquareSize/4,
 							0,
 							2 * Math.PI
@@ -578,7 +589,7 @@
 				}
 			}
 
-			function drawTwoSidesColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
+			function drawTwoSidesColumns(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns)
 			{
 				for (var col = 1 ; col <= numberColumns ; col++)
 				{
@@ -594,7 +605,7 @@
 					ctx.beginPath();
 					ctx.arc(
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
-						y_StartingPoint + oneSquareSize*resultSquareHeight - (oneSquareSize/2),
+						y_StartingPoint + oneSquareSize*resultSquareLength - (oneSquareSize/2),
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
@@ -603,21 +614,21 @@
 				}
 			}
 
-			function drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth)
+			function drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth)
 			{
 				ctx.beginPath();
 				ctx.moveTo(x_StartingPoint, y_StartingPoint);
-				ctx.lineTo(x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareHeight);
+				ctx.lineTo(x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareLength);
 				ctx.stroke();
 
 				ctx.beginPath();
-				ctx.moveTo(x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareHeight);
-				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareHeight);
+				ctx.moveTo(x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareLength);
+				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareLength);
 				ctx.stroke();
 
 				ctx.beginPath();
 				ctx.moveTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint);
-				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareHeight);
+				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareLength);
 				ctx.stroke();
 
 				ctx.beginPath();
