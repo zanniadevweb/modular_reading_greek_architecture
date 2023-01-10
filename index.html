@@ -112,7 +112,7 @@
 																		<option value="6">6</option>
 																		<option value="8">8</option>
 																		<option value="10">10</option>
-																		<option value="10">12</option>
+																		<option value="12">12</option>
 																	</select>
 			</br>
 			Type de temple : <select id="selectTypeTemple">
@@ -131,13 +131,14 @@
 		</br></br>
 
 			<script>
+			// calculateModularity();
 			function calculateModularity()
 			{
 			  var textLength = document.getElementById("inputLength").value; // 8.40
-				// textLength = 24;
+				// textLength = 8.40;
 
 				var textWidth = document.getElementById("inputWidth").value; // 4.60
-				// textWidth = 9.60;
+				// textWidth = 4.60;
 
 				var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
 				// textUnitValue = 0.3436;
@@ -412,7 +413,6 @@
 
 			function draw(resultSquareLength, resultSquareWidth, numberColumns, selectTypeTemple, resultSquareHeight) {
 
-				console.log(resultSquareHeight)
 				var typeTemple = '';
 
 				if (selectTypeTemple == 1) {
@@ -437,18 +437,24 @@
 		        return;
 		    }
 		    const ctx = canvas.getContext('2d');
+				ctx.canvas.width  = 900
+				ctx.canvas.height = 900
+
 				ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-				var width = 900
-				var height = 900
-				drawGridOnCanvas(ctx, width, height);
+				drawGridOnCanvas(ctx, canvas.width, canvas.height);
 
 		    ctx.strokeStyle = 'red';
+				ctx.font = "25px serif";
 		    ctx.lineWidth = 2;
 
 				var x_StartingPoint = 58;
+				var x_StartingPointFacade = x_StartingPoint*6.80;
 				var y_StartingPoint = 58;
+				var y_StartingPointFacade = y_StartingPoint*2;
 				var oneSquareSize = 28;
+
+				ctx.fillText("Plan", x_StartingPoint*1.5, 50);
 
 				// DESSIN DU PLAN -------------------------------------------------------------------------------------------------------
 		    drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth);
@@ -458,46 +464,58 @@
 				}
 				//  ----------------------------------------------------------------------------------------------------------------------
 
-				console.log(resultSquareLength)
-					console.log(resultSquareHeight)
+				ctx.fillText("Élévation", x_StartingPointFacade, 50);
 				// DESSIN DE LA FACADE
-				drawBaseRectangle(ctx, x_StartingPoint*4.82, y_StartingPoint*4.82, oneSquareSize, -resultSquareHeight, resultSquareWidth);
+				drawBaseRectangle(ctx, x_StartingPointFacade, y_StartingPointFacade, oneSquareSize, resultSquareHeight, resultSquareWidth);
 				if (numberColumns > 0 || typeTemple !== 'Aptère')
 				{
-				drawColumnHeight(ctx, x_StartingPoint*4.82, y_StartingPoint*4.82, oneSquareSize, -resultSquareHeight, resultSquareWidth)
+						drawColumnHeight(ctx, x_StartingPointFacade, y_StartingPointFacade, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
 				}
 				//  ----------------------------------------------------------------------------------------------------------------------
 			}
-				
-			
-						
+
+			function drawMoveTo(ctx, x, y) {
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+			}
+
+			function drawLineTo(ctx, x, y) {
+				ctx.lineTo(x, y);
+				ctx.stroke();
+			}
+
+			function drawCircleTo(ctx, x, y, radius, startAngle, endAngle) {
+				ctx.beginPath();
+				ctx.arc(
+					x,
+					y,
+					radius,
+					startAngle,
+					endAngle
+				);
+				ctx.stroke();
+			}
+
 			function drawColumnHeight(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
 			{
 				for (var col = 1 ; col <= numberColumns ; col++)
 				{
-						ctx.beginPath();
-						ctx.arc(	
+					drawCircleTo(
+						ctx,
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
 						y_StartingPoint + (oneSquareSize/2) - (oneSquareSize/2),
-							oneSquareSize/4,
-							0,
-							2 * Math.PI
-						);
-						ctx.stroke();
-						
-						ctx.beginPath();
-				ctx.moveTo(x_StartingPoint + (oneSquareSize/1.2)*col, y_StartingPoint);
-				ctx.lineTo(x_StartingPoint + (oneSquareSize/1.2)*col,y_StartingPoint + oneSquareSize*resultSquareHeight);
-				ctx.stroke();
-				
-				ctx.beginPath();
-				ctx.moveTo(x_StartingPoint + (oneSquareSize/1.3)*col, y_StartingPoint);
-				ctx.lineTo(x_StartingPoint + (oneSquareSize/1.3)*col,y_StartingPoint + oneSquareSize*resultSquareHeight);
-				ctx.stroke();
-						
-				}	
+						oneSquareSize/4,
+						0,
+						2 * Math.PI
+					);
+
+					drawMoveTo(ctx, x_StartingPoint + (oneSquareSize/1.2)*col, y_StartingPoint);
+					drawLineTo(ctx, x_StartingPoint + (oneSquareSize/1.2)*col,y_StartingPoint + oneSquareSize*resultSquareHeight);
+
+					drawMoveTo(ctx, x_StartingPoint + (oneSquareSize/1.3)*col, y_StartingPoint);
+					drawLineTo(ctx, x_StartingPoint + (oneSquareSize/1.3)*col,y_StartingPoint + oneSquareSize*resultSquareHeight);
+				}
 			}
-		
 
 			function drawColumnDrums(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth, numberColumns, typeTemple)
 			{
@@ -544,51 +562,47 @@
 				for (var colShort = 1 ; colShort <= numberColumns ; colShort++)
 				{
 					// DRAW NORTH
-					ctx.beginPath();
-					ctx.arc(
+					drawCircleTo(
+						ctx,
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colShort*2,
 						y_StartingPoint + oneSquareSize - (oneSquareSize/2),
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
 					);
-					ctx.stroke();
 
 					// DRAW SOUTH
-					ctx.beginPath();
-					ctx.arc(
+					drawCircleTo(
+						ctx,
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colShort*2,
 						y_StartingPoint + oneSquareSize*resultSquareLength - (oneSquareSize/2),
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
 					);
-					ctx.stroke();
 				}
 				// DRAW LONG SIDES
 				for (var colLong = 1 ; colLong <= ruleLongSides ; colLong++)
 				{
 					// DRAW WEST
-					ctx.beginPath();
-					ctx.arc(
+					drawCircleTo(
+						ctx,
 						y_StartingPoint + oneSquareSize - (oneSquareSize/2),
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colLong*2,
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
 					);
-					ctx.stroke();
 
 					// DRAW EAST
-					ctx.beginPath();
-					ctx.arc(
+					drawCircleTo(
+						ctx,
 						y_StartingPoint + oneSquareSize*resultSquareWidth - (oneSquareSize/2),
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*colLong*2,
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
 					);
-					ctx.stroke();
 				}
 			}
 
@@ -598,25 +612,23 @@
 				{
 					if (cardinalSide == 'north')
 					{
-						ctx.beginPath();
-						ctx.arc(
+						drawCircleTo(
+							ctx,
 							x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
 							y_StartingPoint + oneSquareSize - (oneSquareSize/2),
 							oneSquareSize/4,
 							0,
 							2 * Math.PI
 						);
-						ctx.stroke();
 					} else if (cardinalSide == 'south') {
-						ctx.beginPath();
-						ctx.arc(
+						drawCircleTo(
+							ctx,
 							x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
 							y_StartingPoint + oneSquareSize*resultSquareLength - (oneSquareSize/2),
 							oneSquareSize/4,
 							0,
 							2 * Math.PI
 						);
-						ctx.stroke();
 					}
 				}
 			}
@@ -625,48 +637,38 @@
 			{
 				for (var col = 1 ; col <= numberColumns ; col++)
 				{
-					ctx.beginPath();
-					ctx.arc(
+					drawCircleTo(
+						ctx,
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
 						y_StartingPoint + oneSquareSize - (oneSquareSize/2),
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
 					);
-					ctx.stroke();
-					ctx.beginPath();
-					ctx.arc(
+					drawCircleTo(
+						ctx,
 						x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2,
 						y_StartingPoint + oneSquareSize*resultSquareLength - (oneSquareSize/2),
 						oneSquareSize/4,
 						0,
 						2 * Math.PI
 					);
-					ctx.stroke();
 				}
 			}
 
 			function drawBaseRectangle(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareLength, resultSquareWidth)
 			{
-				ctx.beginPath();
-				ctx.moveTo(x_StartingPoint, y_StartingPoint);
-				ctx.lineTo(x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareLength);
-				ctx.stroke();
+				drawMoveTo(ctx, x_StartingPoint, y_StartingPoint);
+				drawLineTo(ctx, x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareLength);
 
-				ctx.beginPath();
-				ctx.moveTo(x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareLength);
-				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareLength);
-				ctx.stroke();
+				drawMoveTo(ctx, x_StartingPoint, y_StartingPoint + oneSquareSize*resultSquareLength);
+				drawLineTo(ctx, x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareLength);
 
-				ctx.beginPath();
-				ctx.moveTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint);
-				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareLength);
-				ctx.stroke();
+				drawMoveTo(ctx, x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint);
+				drawLineTo(ctx, x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint + oneSquareSize*resultSquareLength);
 
-				ctx.beginPath();
-				ctx.moveTo(x_StartingPoint, y_StartingPoint);
-				ctx.lineTo(x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint);
-				ctx.stroke();
+				drawMoveTo(ctx, x_StartingPoint, y_StartingPoint);
+				drawLineTo(ctx, x_StartingPoint + oneSquareSize*resultSquareWidth, y_StartingPoint);
 			}
 
 			function drawGridOnCanvas(ctx, width, height)
