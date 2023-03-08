@@ -510,14 +510,14 @@
 				    currentColumnPositionX = x_StartingPoint - (oneSquareSize/2) + (oneSquareSize/2)*col*2; // DISTANCE PRISE PAR LES COLONNES
 				    currentColumnPositionY = y_StartingPoint + (oneSquareSize/2) - (oneSquareSize/2); // PLACEMENT COLONNES LE LONG DU MUR
 
-				    drawCircleTo(
-					ctx,
-					currentColumnPositionX,
-					currentColumnPositionY,
-					diameterColumn,
-					0,
-					2 * Math.PI
-				    );
+				    // drawCircleTo(
+				    //  ctx,
+				    //  currentColumnPositionX,
+				    //      currentColumnPositionY,
+				    //  diameterColumn,
+				    //  0,
+				    //  2 * Math.PI
+				    // );
 
 				    drawMoveTo(ctx, currentColumnPositionX-diameterColumn, currentColumnPositionY);
 				    drawLineTo(ctx, currentColumnPositionX-diameterColumn, currentColumnPositionY + oneSquareSize*resultSquareHeight);
