@@ -157,7 +157,7 @@ function calculateModularity()
 					iRangeModulo + ". BILAN : "
 				+ feetUnitLengthCountArr[iRangeModulo] + ' PIEDS pour ' + numberOfSquareByBuildingSide[0] + ' CASES (LONGUEUR) '
 				+ "et : " + feetUnitWidthCountArr[iRangeModulo] + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES (LARGEUR)' + " ; "
-				+ "pour UN MODULE DE : " + modulo1Arr[iRangeModulo] + ' (LONGUEUR) = ' + modulo2Arr[iRangeModulo] + ' (LARGEUR) PIEDS ( ' + modulo1Arr[iRangeModulo]*rangeModulosRes[iRangeModulo] + ' / ' + modulo2Arr[iRangeModulo]*rangeModulosRes[iRangeModulo] + ' m) PAR CASE' + " ; "
+				+ "pour UN MODULE DE : " + modulo1Arr[iRangeModulo] + ' (LONGUEUR) = ' + modulo2Arr[iRangeModulo] + ' (LARGEUR) PIEDS, SOIT : ' + modulo1Arr[iRangeModulo]*rangeModulosRes[iRangeModulo] + '( =('+feetUnitLengthCountArr[iRangeModulo]+'/'+numberOfSquareByBuildingSide[0]+')x'+rangeModulosRes[iRangeModulo]+' ) (LONGUEUR) / ' + modulo2Arr[iRangeModulo]*rangeModulosRes[iRangeModulo] + '( =('+feetUnitWidthCountArr[iRangeModulo]+'/'+numberOfSquareByBuildingSide[1]+')x'+rangeModulosRes[iRangeModulo]+' ) (LARGEUR) m PAR CASE' + " ; "
 				);
 			}
 		} else {
@@ -165,7 +165,7 @@ function calculateModularity()
 				"BILAN : "
 			+ feetUnitLengthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[0] + ' CASES (LONGUEUR) '
 			+ "et : " + feetUnitWidthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES (LARGEUR)' + " ; "
-			+ "pour UN MODULE DE : " + modulo1 + ' (LONGUEUR) = ' + modulo2 + ' (LARGEUR) PIEDS ( ' + modulo1*textUnitValue + ' / ' + modulo2*textUnitValue + ' m) PAR CASE' + " ; "
+			+ "pour UN MODULE DE : " + modulo1 + ' (LONGUEUR) = ' + modulo2 + ' (LARGEUR) PIEDS, SOIT : ' + modulo1*textUnitValue + '( =('+feetUnitLengthCount+'/'+numberOfSquareByBuildingSide[0]+')x'+textUnitValue+' ) (LONGUEUR) / ' + modulo2*textUnitValue + '( =('+feetUnitWidthCount+'/'+numberOfSquareByBuildingSide[1]+')x'+textUnitValue+' ) (LARGEUR) m PAR CASE' + " ; "
 			);
 		}
 
