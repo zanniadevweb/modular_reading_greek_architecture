@@ -15,13 +15,31 @@ function calculateModularity()
 
 	var selectNumberColumns = document.getElementById("selectNumberColumns").value;// 4
 
-	var selectTypeTemple = document.getElementById("selectTypeTemple").value;// Périptère (2n-1)
+	var selectTypeTemple = document.getElementById("selectTypeTemple").value; // Périptère (2n-1)
 
-	var feetUnitLengthCount = Math.round(textLength/textUnitValue);
-	var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
+	var rangeModulosRes = [];
+	if (!textUnitValue) {
+		// Min Range and Max Range are first expressed in meters without the '0.' for conveniance in for loop. Result is with '0.'
+		var minRange = 2940;
+		var maxRange = 3500;
+		rangeModulosRes = forLoopDigits(minRange, maxRange);
+
+		var feetUnitLengthCountArr = [];
+		var feetUnitWidthCountArr = [];
+
+		for (var iRangeModulo = 0; iRangeModulo < rangeModulosRes.length; iRangeModulo++) {
+			feetUnitLengthCountArr.push(Math.round(textLength/rangeModulosRes[iRangeModulo]));
+			feetUnitWidthCountArr.push(Math.round(textWidth/rangeModulosRes[iRangeModulo]));
+		}
+
+	} else {
+		var feetUnitLengthCount = Math.round(textLength/textUnitValue);
+		var feetUnitWidthCount = Math.round(textWidth/textUnitValue);
+	}
+
 	var differenceLengthWidth = textLength - textWidth;
 
-	if (!textLength || !textWidth || !textUnitValue)
+	if (!textLength || !textWidth) // || !textUnitValue
 	{
 		writeErrorMessage("ATTENTION : Tous les champs doivent être remplis avant calcul");
 		writeResultMessage('');
@@ -38,6 +56,7 @@ function calculateModularity()
 		writeMoreDetailCalculationWidth(false);
 		writeSummaryMessage('');
 	} else {
+
 		writeErrorMessage('');
 
 		var ratioLengthWidth = textLength/textWidth;
@@ -46,9 +65,18 @@ function calculateModularity()
 		var numberOfSquareByBuildingSide = calculateNumberOfSquareByBuildingSide(textLength, textWidth, selectRounding, selectSizeModulo);
 		var commonValueLengthWidth = numberOfSquareByBuildingSide[4];
 
-		var modulo1 = (feetUnitLengthCount / numberOfSquareByBuildingSide[0]).toFixed(selectRounding);
-		var modulo2 = (feetUnitWidthCount / numberOfSquareByBuildingSide[1]).toFixed(selectRounding);
-
+		if (rangeModulosRes.length > 0) {
+			var modulo1Arr = [];
+			var modulo2Arr = [];
+			for (var iRangeModulo = 0; iRangeModulo < rangeModulosRes.length; iRangeModulo++) {
+				modulo1Arr.push((feetUnitLengthCountArr[iRangeModulo] / numberOfSquareByBuildingSide[0]).toFixed(selectRounding));
+				modulo2Arr.push((feetUnitWidthCountArr[iRangeModulo] / numberOfSquareByBuildingSide[1]).toFixed(selectRounding));
+			}
+		}
+		else {
+			var modulo1 = (feetUnitLengthCount / numberOfSquareByBuildingSide[0]).toFixed(selectRounding);
+			var modulo2 = (feetUnitWidthCount / numberOfSquareByBuildingSide[1]).toFixed(selectRounding);
+		}
 
 		// ----------------------------------------------------------
 		var ratioLongueurTableau = [];
@@ -57,51 +85,109 @@ function calculateModularity()
 		ratioLargeurTableau = numberOfSquareByBuildingSide[3];
 		// ----------------------------------------------------------
 
-		writeResultMessage(
-			"DONNEES : "
-		+	"NLO = Nombre pieds / longueur = " + feetUnitLengthCount + " ; "
-		+ "NLA = Nombre pieds / largeur = " + feetUnitWidthCount + " ; "
-		+ "RATL = Ratio arrondi (" + selectRounding + " chiffre) longueur / largeur = " + roundedRatioLengthWidth + " ; "
-		+ "FLL = Fraction ratio longueur / largeur = " + fractionFromFloat + " ; "
-		+ "Longueur & largeur nombre de cases de la grille = " + numberOfSquareByBuildingSide[0] + " & " + numberOfSquareByBuildingSide[1] + " ; "
-		+ "Valeur d'un module arrondi (" + selectRounding + " chiffre) : M1 = " + modulo1 + " (LONGUEUR) & M2 = " + modulo2 + " (LARGEUR) ; "
-		);
+		if (rangeModulosRes.length > 0) {
+			for (var iRangeModulo = 0; iRangeModulo < rangeModulosRes.length; iRangeModulo++) {
+				console.log(
+					iRangeModulo + ". DONNEES : "
+				+	"NLO = Nombre pieds / longueur = " + feetUnitLengthCountArr[iRangeModulo] + " ; "
+				+ "NLA = Nombre pieds / largeur = " + feetUnitWidthCountArr[iRangeModulo] + " ; "
+				+ "RATL = Ratio arrondi (" + selectRounding + " chiffre) longueur / largeur = " + roundedRatioLengthWidth + " ; "
+				+ "FLL = Fraction ratio longueur / largeur = " + fractionFromFloat + " ; "
+				+ "Longueur & largeur nombre de cases de la grille = " + numberOfSquareByBuildingSide[0] + " & " + numberOfSquareByBuildingSide[1] + " ; "
+				+ "Valeur d'un module arrondi (" + selectRounding + " chiffre) : M1 = " + modulo1Arr[iRangeModulo] + " (LONGUEUR) & M2 = " + modulo2Arr[iRangeModulo] + " (LARGEUR) ; "
+				);
+			}
+		} else {
+			writeResultMessage(
+				"DONNEES : "
+			+	"NLO = Nombre pieds / longueur = " + feetUnitLengthCount + " ; "
+			+ "NLA = Nombre pieds / largeur = " + feetUnitWidthCount + " ; "
+			+ "RATL = Ratio arrondi (" + selectRounding + " chiffre) longueur / largeur = " + roundedRatioLengthWidth + " ; "
+			+ "FLL = Fraction ratio longueur / largeur = " + fractionFromFloat + " ; "
+			+ "Longueur & largeur nombre de cases de la grille = " + numberOfSquareByBuildingSide[0] + " & " + numberOfSquareByBuildingSide[1] + " ; "
+			+ "Valeur d'un module arrondi (" + selectRounding + " chiffre) : M1 = " + modulo1 + " (LONGUEUR) & M2 = " + modulo2 + " (LARGEUR) ; "
+			);
+		}
 
-		writeDetailCalculation(
-			"DETAIL CALCULS : "
-		+	"NLO = Arrondi(" + textLength + " / " + textUnitValue + ") ; "
-		+	"NLA = Arrondi(" + textWidth + " / " + textUnitValue + ") ; "
-		+ "RATL = Arrondi(" + textLength + " / " + textWidth + ") ; "
-		+ "FLL = Fraction(" + roundedRatioLengthWidth + ") ; "
-		+ "M1 = NLO / Nombre cases pour Longueur = " + feetUnitLengthCount + " / " +  numberOfSquareByBuildingSide[0] +  ") ; "
-		+ "M2 = NLA / Nombre cases pour Largeur = " + feetUnitWidthCount + " / " + numberOfSquareByBuildingSide[1] +  ")"
-		);
+		if (rangeModulosRes.length > 0) {
+			for (var iRangeModulo = 0; iRangeModulo < rangeModulosRes.length; iRangeModulo++) {
+				console.log(
+					iRangeModulo + ". DETAIL CALCULS : "
+				+	"NLO = Arrondi(" + textLength + " / " + rangeModulosRes[iRangeModulo] + ") ; "
+				+	"NLA = Arrondi(" + textWidth + " / " + rangeModulosRes[iRangeModulo] + ") ; "
+				+ "RATL = Arrondi(" + textLength + " / " + textWidth + ") ; "
+				+ "FLL = Fraction(" + roundedRatioLengthWidth + ") ; "
+				+ "M1 = NLO / Nombre cases pour Longueur = " + feetUnitLengthCountArr[iRangeModulo] + " / " +  numberOfSquareByBuildingSide[0] +  ") ; "
+				+ "M2 = NLA / Nombre cases pour Largeur = " + feetUnitWidthCountArr[iRangeModulo] + " / " + numberOfSquareByBuildingSide[1] +  ")"
+				);
+			}
+		} else {
+			writeDetailCalculation(
+				"DETAIL CALCULS : "
+			+	"NLO = Arrondi(" + textLength + " / " + textUnitValue + ") ; "
+			+	"NLA = Arrondi(" + textWidth + " / " + textUnitValue + ") ; "
+			+ "RATL = Arrondi(" + textLength + " / " + textWidth + ") ; "
+			+ "FLL = Fraction(" + roundedRatioLengthWidth + ") ; "
+			+ "M1 = NLO / Nombre cases pour Longueur = " + feetUnitLengthCount + " / " +  numberOfSquareByBuildingSide[0] +  ") ; "
+			+ "M2 = NLA / Nombre cases pour Largeur = " + feetUnitWidthCount + " / " + numberOfSquareByBuildingSide[1] +  ")"
+			);
+		}
 
 		var removeBeforeLength = removeAllAfterArrayValue(ratioLongueurTableau, commonValueLengthWidth).join(", ");
 		var removeAfterLength = removeAllBeforeArrayValue(ratioLongueurTableau, commonValueLengthWidth).slice(1).join(", ");
 
-		writeMoreDetailCalculationLength(true, removeBeforeLength, commonValueLengthWidth, removeAfterLength);
+		if (rangeModulosRes.length > 0) {
+			console.log(true, removeBeforeLength, commonValueLengthWidth, removeAfterLength);
+		} else {
+			writeMoreDetailCalculationLength(true, removeBeforeLength, commonValueLengthWidth, removeAfterLength);
+		}
 
 		var removeBeforeWidth = removeAllAfterArrayValue(ratioLargeurTableau, commonValueLengthWidth).join(", ");
 		var removeAfterWidth = removeAllBeforeArrayValue(ratioLargeurTableau, commonValueLengthWidth).slice(1).join(", ");
 
-		writeMoreDetailCalculationWidth(true, removeBeforeWidth, commonValueLengthWidth, removeAfterWidth);
+		if (rangeModulosRes.length > 0) {
+			console.log(true, removeBeforeWidth, commonValueLengthWidth, removeAfterWidth);
+		} else {
+			writeMoreDetailCalculationWidth(true, removeBeforeWidth, commonValueLengthWidth, removeAfterWidth);
+		}
 
-		writeSummaryMessage(
-			"BILAN : "
-		+ feetUnitLengthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[0] + ' CASES (LONGUEUR) '
-		+ "et : " + feetUnitWidthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES (LARGEUR)' + " ; "
-		+ "pour UN MODULE DE : " + modulo1 + ' (LONGUEUR) = ' + modulo2 + ' (LARGEUR) PIEDS ( ' + modulo1*textUnitValue + ' / ' + modulo2*textUnitValue + ' m) PAR CASE' + " ; "
-		);
+		if (rangeModulosRes.length > 0) {
+			for (var iRangeModulo = 0; iRangeModulo < rangeModulosRes.length; iRangeModulo++) {
+				console.log(
+					iRangeModulo + ". BILAN : "
+				+ feetUnitLengthCountArr[iRangeModulo] + ' PIEDS pour ' + numberOfSquareByBuildingSide[0] + ' CASES (LONGUEUR) '
+				+ "et : " + feetUnitWidthCountArr[iRangeModulo] + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES (LARGEUR)' + " ; "
+				+ "pour UN MODULE DE : " + modulo1Arr[iRangeModulo] + ' (LONGUEUR) = ' + modulo2Arr[iRangeModulo] + ' (LARGEUR) PIEDS ( ' + modulo1Arr[iRangeModulo]*rangeModulosRes[iRangeModulo] + ' / ' + modulo2Arr[iRangeModulo]*rangeModulosRes[iRangeModulo] + ' m) PAR CASE' + " ; "
+				);
+			}
+		} else {
+			writeSummaryMessage(
+				"BILAN : "
+			+ feetUnitLengthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[0] + ' CASES (LONGUEUR) '
+			+ "et : " + feetUnitWidthCount + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES (LARGEUR)' + " ; "
+			+ "pour UN MODULE DE : " + modulo1 + ' (LONGUEUR) = ' + modulo2 + ' (LARGEUR) PIEDS ( ' + modulo1*textUnitValue + ' / ' + modulo2*textUnitValue + ' m) PAR CASE' + " ; "
+			);
+		}
 
-		createGridModulo(numberOfSquareByBuildingSide[0], numberOfSquareByBuildingSide[1]);
+		if (textUnitValue) {
+			createGridModulo(numberOfSquareByBuildingSide[0], numberOfSquareByBuildingSide[1]);
+			var resultSquareLength = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
+			var resultSquareWidth = numberOfSquareByBuildingSide[1]; // Nombre de cases en largeur
+			var resultSquareHeight = numberOfSquareByBuildingSide[1]/roundedRatioLengthWidth
+			draw(resultSquareLength, resultSquareWidth, selectNumberColumns, selectTypeTemple, resultSquareHeight);
+		}
 
-		var resultSquareLength = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
-		var resultSquareWidth = numberOfSquareByBuildingSide[1]; // Nombre de cases en largeur
-
-		var resultSquareHeight = numberOfSquareByBuildingSide[1]/roundedRatioLengthWidth
-		draw(resultSquareLength, resultSquareWidth, selectNumberColumns, selectTypeTemple, resultSquareHeight);
 	}
+}
+
+function forLoopDigits(minRange, maxRange) {
+	var rangeModulos = [];
+	var striRangeModulo = '';
+	for (var iRangeModulo = minRange; iRangeModulo <= maxRange; iRangeModulo++) {
+		striRangeModulo = iRangeModulo.toString();
+		rangeModulos.push( +('0'+'.'+striRangeModulo) ) // + in front of string converts it to Number
+	}
+	return rangeModulos;
 }
 
 function removeAllBeforeArrayValue(wholeArray, number) {
