@@ -1,0 +1,38 @@
+.grid-container {
+  display: grid;
+  grid-auto-rows: 1fr;
+  background: url('../../temple_b_selinus.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.grid-container > div::before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+.gridCanvas {
+  position: relative !important;
+  border: lightgrey 1px solid;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+/* Three image containers (use 25% for four, and 50% for two, etc) */
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
