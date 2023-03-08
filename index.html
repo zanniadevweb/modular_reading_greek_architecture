@@ -498,28 +498,32 @@
 				ctx.stroke();
 			}
 
-			function drawColumnHeight(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
-			{
+            		function drawColumnHeight(ctx, x_StartingPoint, y_StartingPoint, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
+            		{
 				var positionCenterColX = 0;
 				var positionCenterColY = 0;
+				var variation = 25;
+				var diameterColumn = oneSquareSize/4;
+
 				for (var col = 1 ; col <= numberColumns ; col++)
 				{
-					currentColumnPositionX = x_StartingPoint-(oneSquareSize/2) + (oneSquareSize/2)*col*2; // DISTANCE PRISE PAR LES COLONNES
-					currentColumnPositionY = y_StartingPoint + (oneSquareSize/2) - (oneSquareSize/2); // PLACEMENT COLONNES LE LONG DU MUR
-					drawCircleTo(
-						ctx,
-						currentColumnPositionX,
-					  currentColumnPositionY,
-						oneSquareSize/4,
-						0,
-						2 * Math.PI
-					);
+				    currentColumnPositionX = x_StartingPoint - (oneSquareSize/2) + (oneSquareSize/2)*col*2; // DISTANCE PRISE PAR LES COLONNES
+				    currentColumnPositionY = y_StartingPoint + (oneSquareSize/2) - (oneSquareSize/2); // PLACEMENT COLONNES LE LONG DU MUR
 
-					drawMoveTo(ctx, x_StartingPoint + (oneSquareSize/1.2)*col, y_StartingPoint);
-					drawLineTo(ctx, x_StartingPoint + (oneSquareSize/1.2)*col,y_StartingPoint + oneSquareSize*resultSquareHeight);
+				    drawCircleTo(
+					ctx,
+					currentColumnPositionX,
+					currentColumnPositionY,
+					diameterColumn,
+					0,
+					2 * Math.PI
+				    );
 
-					drawMoveTo(ctx, x_StartingPoint + (oneSquareSize/1.3)*col, y_StartingPoint);
-					drawLineTo(ctx, x_StartingPoint + (oneSquareSize/1.3)*col,y_StartingPoint + oneSquareSize*resultSquareHeight);
+				    drawMoveTo(ctx, currentColumnPositionX-diameterColumn, currentColumnPositionY);
+				    drawLineTo(ctx, currentColumnPositionX-diameterColumn, currentColumnPositionY + oneSquareSize*resultSquareHeight);
+
+				    drawMoveTo(ctx, currentColumnPositionX+diameterColumn, currentColumnPositionY);
+				    drawLineTo(ctx, currentColumnPositionX+diameterColumn, currentColumnPositionY + oneSquareSize*resultSquareHeight);
 				}
 			}
 
