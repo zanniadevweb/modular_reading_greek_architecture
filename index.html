@@ -106,6 +106,7 @@
 
 		</br></br>
 		<h2>Résultat :</h2>
+		<canvas id="chart" style="display:none;"></canvas>
 		<span id="errorMessage" style="font-weight: bold;"><h3></h3></span>
 		<span id="spanResult"><h3>...</h3></span></br></br>
 		<span id="detailCalculation"><h3></h3></span></br></br>
@@ -117,17 +118,16 @@
 		<div class="row">
 		  <div class="column">
 				<!-- <div class="grid-container" id="grid-container" style="max-width: 20%; max-height: 20%;"></div> -->
-				<div class="grid-container" id="grid-container"></div>	
+				<div class="grid-container" id="grid-container" style="display:none;"></div>
 		  </div>
 		  <div class="column">
-				<canvas class="gridCanvas" id="canvas" height="590" width="590"></canvas>
+				<canvas class="gridCanvas" id="canvas" height="590" width="590" style="display:none;"></canvas>
 		  </div>
 		</div>
 
 		</br></br>
 
-		</br></br>
-
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
 		<script type='text/javascript' src='assets/js/modularityActions.js'></script>
 		<script type='text/javascript' src='assets/js/readAndWriteFileActions.js'></script>
 
