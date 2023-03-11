@@ -18,17 +18,22 @@
 		    <th>Valeur moyenne (m)</th>
 		  </tr>
 			<tr>
-				<td>Romain</td>
+				<td>Attique-Ionique</td>
+				<td>Pied</td>
+				<td>0.2940</td>
+			</tr>
+			<tr>
+				<td>Attiquo-Eubéïque ou Romain</td>
 				<td>Pied</td>
 				<td>0.2950</td>
 			</tr>
-		  <tr>
-		    <td>Samos</td>
-		    <td>Pied</td>
-		    <td>0.3040</td>
-		  </tr>
 			<tr>
-				<td>Dorique</td>
+				<td>(?)-Ionique</td>
+				<td>Pied</td>
+				<td>0.2990</td>
+			</tr>
+			<tr>
+				<td>Dorique-Pheidonic</td>
 				<td>Pied</td>
 				<td>0.3270</td>
 			</tr>
@@ -38,9 +43,14 @@
 				<td>0.3436</td>
 			</tr>
 			<tr>
-				<td>Ionique</td>
+				<td>Ionique-Samien</td>
 				<td>Pied</td>
 				<td>0.3490</td>
+			</tr>
+			<tr>
+				<td>Ptolémaïque</td>
+				<td>Pied</td>
+				<td>0.3550</td>
 			</tr>
 		</table>
 
@@ -51,12 +61,13 @@
 				</br>
 				Largeur édifice : <input type="text" id="inputWidth" placeholder="4.60" size="100" title="Type in a width">
 				</br>
-				Valeur d'un pied en m : <input type="text" id="inputUnitValue" placeholder="0.3436" size="100" title="Type in a unit value"> (si non précisé, plage de valeurs 0.294 - 0.350 m, résultat dans 'Console' via la touche F12 ou Cmd + Option + C )
+				Valeur d'un pied en m : <input type="text" id="inputUnitValue" placeholder="0.3436" size="100" title="Type in a unit value"> (si non précisé, plage de valeurs 0.294 - 0.355 m, résultat dans 'Console' via la touche F12 ou Cmd + Option + C )
 				</br>
 				Arrondi après la virgule : <select id="selectRounding">
 																		<option value="1">1</option>
 																		<option value="2">2</option>
 																		<option value="3">3</option>
+																		<option value="4">4</option>
 																	</select>
 				</br>
 				Nombre cases minimum largeur (influe sur taille module) : <select id="selectSizeModulo">
@@ -85,6 +96,10 @@
 																	<option value="7">Aptère</option>
 																</select>
 
+			</br>
+			[Facultatif] Corriger Nombre (entier) Cases Longueur : <input id="inputForceNumberCubesLength" type="number" min="0" max="100" step="1"></br>
+			[Facultatif] Corriger Nombre (entier) Cases Largeur : <input id="inputForceNumberCubesWidth" type="number" min="0" max="100" step="1">
+
 		</br></br>
 		<b>1. (Optionnel) Charger Image (.png ou .jpg) : </b><input id="fileInput" type="file" accept="image/png,image/jpeg" onchange="readFile(this)">
 		<b>2. Calculer la modularité : </b><button onclick="calculateModularity()">GENERER CALCUL MODULES</button>
@@ -101,7 +116,8 @@
 
 		<div class="row">
 		  <div class="column">
-				<div class="grid-container" id="grid-container" style="width: 25%; height: 25%;"></div>
+				<!-- <div class="grid-container" id="grid-container" style="max-width: 20%; max-height: 20%;"></div> -->
+				<div class="grid-container" id="grid-container"></div>	
 		  </div>
 		  <div class="column">
 				<canvas class="gridCanvas" id="canvas" height="590" width="590"></canvas>
