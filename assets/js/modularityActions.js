@@ -7,7 +7,7 @@ function calculateModularity()
 	// textWidth = 4.60;
 
 	var textUnitValue = document.getElementById("inputUnitValue").value;  // 0.3436;
-	// textUnitValue = 0.3436;
+	// textUnitValue = 0.3436
 
 	var selectRounding = document.getElementById("selectRounding").value; // 1
 
@@ -21,7 +21,7 @@ function calculateModularity()
 	if (!textUnitValue) {
 		// Min Range and Max Range are first expressed in meters without the '0.' for conveniance in for loop. Result is with '0.'
 		var minRange = 2940;
-		var maxRange = 3500;
+		var maxRange = 3550;
 		rangeModulosRes = forLoopDigits(minRange, maxRange);
 
 		var feetUnitLengthCountArr = [];
@@ -152,6 +152,10 @@ function calculateModularity()
 		}
 
 		if (rangeModulosRes.length > 0) {
+			var valuesMeterLength = [];
+			var valuesMeterWidth = [];
+			var iRangeModuloVal = [];
+			var rangeModuloVal = [];
 			for (var iRangeModulo = 0; iRangeModulo < rangeModulosRes.length; iRangeModulo++) {
 				console.log(
 					iRangeModulo + ". BILAN : "
@@ -159,7 +163,15 @@ function calculateModularity()
 				+ "et : " + feetUnitWidthCountArr[iRangeModulo] + ' PIEDS pour ' + numberOfSquareByBuildingSide[1] + ' CASES (LARGEUR)' + " ; "
 				+ "pour UN MODULE DE : " + modulo1Arr[iRangeModulo] + ' (LONGUEUR) = ' + modulo2Arr[iRangeModulo] + ' (LARGEUR) PIEDS, SOIT : ' + modulo1Arr[iRangeModulo]*rangeModulosRes[iRangeModulo] + '( =('+feetUnitLengthCountArr[iRangeModulo]+'/'+numberOfSquareByBuildingSide[0]+')x'+rangeModulosRes[iRangeModulo]+' ) (LONGUEUR) / ' + modulo2Arr[iRangeModulo]*rangeModulosRes[iRangeModulo] + '( =('+feetUnitWidthCountArr[iRangeModulo]+'/'+numberOfSquareByBuildingSide[1]+')x'+rangeModulosRes[iRangeModulo]+' ) (LARGEUR) m PAR CASE' + " ; "
 				);
+				iRangeModuloVal.push(iRangeModulo);
+				valuesMeterLength.push(modulo1Arr[iRangeModulo]*rangeModulosRes[iRangeModulo]);
+				valuesMeterWidth.push(modulo2Arr[iRangeModulo]*rangeModulosRes[iRangeModulo]);
+				rangeModuloVal.push(rangeModulosRes[iRangeModulo]);
 			}
+			console.log(iRangeModuloVal.join(';'));
+			console.log(valuesMeterLength.join(';'));
+			console.log(valuesMeterWidth.join(';'));
+			console.log(rangeModuloVal.join(';'));
 		} else {
 			writeSummaryMessage(
 				"BILAN : "
@@ -217,7 +229,7 @@ function writeMoreDetailCalculationLength(isFilled, removeBeforeLength, commonVa
 {
 	var  coloredRatioLength = document.getElementById("moreDetailCalculationLength");
 	if (isFilled) {
-		coloredRatioLength.innerHTML = "Longueur / valeurs [1-40] (Toujours arrondi au 10ème) : " + removeBeforeLength +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" + ", " + removeAfterLength;
+		coloredRatioLength.innerHTML = "Longueur / valeurs [1-40] : " + removeBeforeLength +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" + ", " + removeAfterLength;
 	} else{
 		coloredRatioLength.innerHTML = '';
 	}
@@ -227,7 +239,7 @@ function writeMoreDetailCalculationWidth(isFilled, removeBeforeWidth, commonValu
 {
 	var  coloredRatioWidth = document.getElementById("moreDetailCalculationWidth");
 	if (isFilled) {
-		coloredRatioWidth.innerHTML = "Largeur / valeurs [1-40] (Toujours arrondi au 10ème) : " + removeBeforeWidth +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" +  ", "+ removeAfterWidth;
+		coloredRatioWidth.innerHTML = "Largeur / valeurs [1-40] : " + removeBeforeWidth +  ", " + "<span style='color:red;font-weight: bold;'>"+ commonValueLengthWidth +"</span>" +  ", "+ removeAfterWidth;
 	} else {
 		coloredRatioWidth.innerHTML = '';
 	}
@@ -290,7 +302,16 @@ function calculateNumberOfSquareByBuildingSide(textLength, textWidth, selectRoun
 	}
 
 	indexLength = roundedSquareNumbersLengthArray.indexOf(commonValues[0]) + 1;
+	var forceNumberCubesLength = document.getElementById('inputForceNumberCubesLength').value;
+	if (forceNumberCubesLength !== '') {
+		indexLength = +(forceNumberCubesLength);
+	}
+
 	indexWidth = roundedSquareNumbersWidthArray.indexOf(commonValues[0]) + 1;
+	var forceNumberCubesWidth = document.getElementById('inputForceNumberCubesWidth').value;
+	if (forceNumberCubesWidth !== '') {
+		indexWidth = +(forceNumberCubesWidth);
+	}
 
 	if (indexLength == -1)
 	{
@@ -306,9 +327,9 @@ function calculateNumberOfSquareByBuildingSide(textLength, textWidth, selectRoun
 
 function roundingOneNumberAfterComma(currentNumber, selectRounding)
 {
-	var strNumber = String(currentNumber).slice(0, 4); // EXTRAIT 3 CHIFFRES APRES VIRGULES
+	var strNumber = String(currentNumber).slice(0, 7); // EXTRAIT 5 CHIFFRES APRES VIRGULES
 	var realNumber = Number(strNumber);
-	return round(realNumber, 1); // ARRONDI CONSTANT 1 CHIFFRE APRES VIGULE
+	return round(realNumber, selectRounding); // ARRONDI MODUABLE 1 à 3 CHIFFRES APRES VIGULE
 }
 
 function round(value, precision) {
