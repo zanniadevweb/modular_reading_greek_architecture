@@ -1,3 +1,8 @@
+// ----------- VARIABLES GLOBALES --------------
+var myChart;
+// ----------- VARIABLES GLOBALES --------------
+
+
 function calculateModularity()
 {
 	var textLength = document.getElementById("inputLength").value; // 8.40
@@ -19,6 +24,7 @@ function calculateModularity()
 
 	var rangeModulosRes = [];
 	if (!textUnitValue) {
+		console.clear();
 		// Min Range and Max Range are first expressed in meters without the '0.' for conveniance in for loop. Result is with '0.'
 		var minRange = 2940;
 		var maxRange = 3550;
@@ -172,6 +178,9 @@ function calculateModularity()
 			console.log(valuesMeterLength.join(';'));
 			console.log(valuesMeterWidth.join(';'));
 			console.log(rangeModuloVal.join(';'));
+			drawChart(valuesMeterLength, valuesMeterWidth, rangeModuloVal);
+
+
 		} else {
 			writeSummaryMessage(
 				"BILAN : "
@@ -182,14 +191,67 @@ function calculateModularity()
 		}
 
 		if (textUnitValue) {
+			document.getElementById('chart').style.display = 'none';
+			document.getElementById('canvas').style.display = '';
+			document.getElementById('grid-container').style.display = '';
 			createGridModulo(numberOfSquareByBuildingSide[0], numberOfSquareByBuildingSide[1]);
 			var resultSquareLength = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
 			var resultSquareWidth = numberOfSquareByBuildingSide[1]; // Nombre de cases en largeur
 			var resultSquareHeight = numberOfSquareByBuildingSide[1]/roundedRatioLengthWidth
 			draw(resultSquareLength, resultSquareWidth, selectNumberColumns, selectTypeTemple, resultSquareHeight);
+		} else {
+			writeResultMessage('');
+			writeDetailCalculation('');
+			writeMoreDetailCalculationLength(false);
+			writeMoreDetailCalculationWidth(false);
+			writeSummaryMessage('');
+			document.getElementById('chart').style.display = '';
+			document.getElementById('canvas').style.display = 'none';
+			document.getElementById('grid-container').style.display = 'none';
 		}
 
 	}
+}
+
+function drawChart(arrLength, arrWidth, arrModuloVal) {
+	var ctx = document.getElementById('chart');
+
+	var data = {
+ 		labels: arrModuloVal,
+	  datasets: [
+	    {
+	      label: 'Longueur d\'un module (mètres)',
+	      data: arrLength,
+	      borderColor: 'blue',
+	      backgroundColor: 'blue',
+	    },
+	    {
+	      label: 'Largeur d\'un module (mètres)',
+	      data: arrWidth,
+	      borderColor: 'red',
+	      backgroundColor: 'red',
+	    }
+	  ]
+	};
+
+	var config = {
+	  type: 'line',
+	  data: data,
+	  options: {
+	    responsive: true,
+	    plugins: {
+	      title: {
+	        display: true,
+	        text: 'Légende'
+	      }
+	    }
+	  },
+	};
+
+	if (myChart !== undefined) {
+		myChart.destroy();
+	}
+	myChart = new Chart(ctx,config);
 }
 
 function forLoopDigits(minRange, maxRange) {
