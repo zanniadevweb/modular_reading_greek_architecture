@@ -1,5 +1,4 @@
 function generate3dTemple(length, width, numberColShortSide, heightColumn, idFactorRuleNumberColSide, scene) {
-  console.log('TEST 1.. 2 ...')
   setUp(scene);
   drawArchitecturalElements(length, width, numberColShortSide, heightColumn, idFactorRuleNumberColSide, scene);
 }
