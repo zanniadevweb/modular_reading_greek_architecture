@@ -38,6 +38,11 @@
 				<td>0.3270</td>
 			</tr>
 			<tr>
+				<td>Ionien (ex : Délos)</td>
+				<td>Pied</td>
+				<td>0.3300</td>
+			</tr>
+			<tr>
 				<td>Punique (Leptis Magna)</td>
 				<td>Pied</td>
 				<td>0.3436</td>
@@ -86,7 +91,7 @@
 																		<option value="12">12</option>
 																	</select>
 			</br>
-			Type de temple : <select id="selectTypeTemple">
+			Type de temple (2D) : <select id="selectTypeTemple">
 																	<option value="1">Périptère (2n-1)</option>
 																	<option value="2">Périptère (2n)</option>
 																	<option value="3">Périptère (2n+1)</option>
@@ -113,6 +118,7 @@
 		<span id="moreDetailCalculationLength"><h3></h3></span></br></br>
 		<span id="moreDetailCalculationWidth"><h3></h3></span></br></br>
 		<span id="summary"><h3></h3></span>
+		<canvas id="three_D_Canvas" style="display:none;"></canvas>
 		</br></br>
 
 		<div class="row">
@@ -128,8 +134,10 @@
 		</br></br>
 
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.js"></script>
 		<script type='text/javascript' src='assets/js/modularityActions.js'></script>
 		<script type='text/javascript' src='assets/js/readAndWriteFileActions.js'></script>
+		<script type='text/javascript' src='assets/js/3D_ModellingActions.js'></script>
 
 	</body>
 </html>
