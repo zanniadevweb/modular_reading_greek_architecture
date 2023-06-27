@@ -194,6 +194,7 @@ function calculateModularity()
 			document.getElementById('chart').style.display = 'none';
 			document.getElementById('canvas').style.display = '';
 			document.getElementById('grid-container').style.display = '';
+			document.getElementById('three_D_Canvas').style.display = '';
 			createGridModulo(numberOfSquareByBuildingSide[0], numberOfSquareByBuildingSide[1]);
 			var resultSquareLength = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
 			var resultSquareWidth = numberOfSquareByBuildingSide[1]; // Nombre de cases en largeur
@@ -208,8 +209,11 @@ function calculateModularity()
 			document.getElementById('chart').style.display = '';
 			document.getElementById('canvas').style.display = 'none';
 			document.getElementById('grid-container').style.display = 'none';
+			document.getElementById('three_D_Canvas').style.display = 'none';
 		}
 
+		var scene = new THREE.Scene();
+		generate3dTemple(textLength, textWidth, selectNumberColumns, 13, 'two_n_minus_one', scene); // TODO
 	}
 }
 
@@ -503,7 +507,7 @@ function draw(resultSquareLength, resultSquareWidth, numberColumns, selectTypeTe
 	// DESSIN DE LA FACADE
 	drawBaseRectangle(ctx, x_StartingPointFacade, y_StartingPointFacade, oneSquareSize, resultSquareHeight, resultSquareWidth); // COLONNADE
 	drawBaseRectangle(ctx, x_StartingPointFacade, y_StartingPointFacade, oneSquareSize, -resultSquareHeight/2, resultSquareWidth); // ENTABLEMENT
-	drawBaseTriangle(ctx, x_StartingPointFacade, y_StartingPointFacade, oneSquareSize, -resultSquareHeight/2, resultSquareWidth, numberColumns); // FRONTON
+	// drawBaseTriangle(ctx, x_StartingPointFacade, y_StartingPointFacade, oneSquareSize, -resultSquareHeight/2, resultSquareWidth, numberColumns); // FRONTON
 	if (numberColumns > 0 || typeTemple !== 'Aptère')
 	{
 			drawColumnHeight(ctx, x_StartingPointFacade, y_StartingPointFacade, oneSquareSize, resultSquareHeight, resultSquareWidth, numberColumns)
