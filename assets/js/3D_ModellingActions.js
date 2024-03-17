@@ -480,11 +480,6 @@ function setUp(scene) {
   const width = 30;
   const height = 30;
 
-  let geometry = new THREE.Geometry()
-  geometry.vertices.push(new THREE.Vector3(-5, 0, 0))
-  geometry.vertices.push(new THREE.Vector3(5, 0, 0))
-
-
   //////////////////////////////////////////////////////////////////////////////////
   //		set 3 point lighting						//
   //////////////////////////////////////////////////////////////////////////////////
