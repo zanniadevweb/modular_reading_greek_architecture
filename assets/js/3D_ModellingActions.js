@@ -260,7 +260,25 @@ function drawOneSideColumns(angleRotation = false, color = 'lightgoldenrodyellow
     var boxAbacus = new THREE.Mesh(abacusModel, material);
 
     var columnModel = new THREE.CylinderGeometry( ratioLengthWidth(1), ratioLengthWidth(baseThickness), heightColumn, 12 );
-    var material = new THREE.MeshPhongMaterial({color: color});
+    const baseTexture = 'https://www.starelstones.co.uk/app/uploads/2023/10/Calacatta-White-Marble-Fluted-Marble-Flute-Tiles.jpg';
+    const loader = new THREE.TextureLoader();
+    var mat = new THREE.MeshPhongMaterial({
+      color: color, 
+      map: loader.load(baseTexture, 
+        function ( texture ) {
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.offset.set( 0, 0 );
+        texture.repeat.set( 1, 1 ); // Number of time is repeated texture
+      })
+    });
+    var material = [
+        mat,
+        mat,
+        mat,
+        mat,
+        mat,
+        mat,
+    ];
     var cylinder = new THREE.Mesh(columnModel, material);
 
     return [cylinder, boxAbacus, cylinderEchinus];
