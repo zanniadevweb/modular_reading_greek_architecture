@@ -465,7 +465,6 @@ function setUp(scene) {
   let geometry = new THREE.Geometry()
   geometry.vertices.push(new THREE.Vector3(-5, 0, 0))
   geometry.vertices.push(new THREE.Vector3(5, 0, 0))
-  let line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x00ff00 }))
 
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -486,13 +485,11 @@ function setUp(scene) {
     scene.add( light )
   })()
 
-  scene.add( line );
-
-  const size = 1000;
-  const divisions = 1000;
+  const size = 500;
+  const divisions = 50;
 
   const gridHelper = new THREE.GridHelper( size, divisions );
-  // scene.add( gridHelper );
+  scene.add( gridHelper );
 
   //////////////////////////////////////////////////////////////////////////////////
   //		Camera Controls							//
