@@ -195,6 +195,7 @@ function calculateModularity()
 			document.getElementById('canvas').style.display = '';
 			document.getElementById('grid-container').style.display = '';
 			document.getElementById('three_D_Canvas').style.display = '';
+			document.getElementById('cameraControls').style.display = ''
 			createGridModulo(numberOfSquareByBuildingSide[0], numberOfSquareByBuildingSide[1]);
 			var resultSquareLength = numberOfSquareByBuildingSide[0]; // Nombre de cases en hauteur
 			var resultSquareWidth = numberOfSquareByBuildingSide[1]; // Nombre de cases en largeur
@@ -210,6 +211,7 @@ function calculateModularity()
 			document.getElementById('canvas').style.display = 'none';
 			document.getElementById('grid-container').style.display = 'none';
 			document.getElementById('three_D_Canvas').style.display = 'none';
+			document.getElementById('cameraControls').style.display = 'none';
 		}
 
 		var scene = new THREE.Scene();
