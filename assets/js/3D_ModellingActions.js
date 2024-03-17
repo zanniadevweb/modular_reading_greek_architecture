@@ -442,6 +442,7 @@ function drawDoricFrise(angleRotation = false, sizeDoricFriseLength = 20, sizeDo
   return box2;
 }
 
+var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 10000);
 function setUp(scene) {
   var three_D_Canvas = document.getElementById('three_D_Canvas');
   var renderer = new THREE.WebGLRenderer({ alpha: true, canvas: three_D_Canvas });
@@ -452,7 +453,6 @@ function setUp(scene) {
   scene.name = 'scene';
 
   // create a PerspectiveCamera
-  var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 10000);
   camera.position.set( 0, 0, 100 );
   camera.fov = 20; // ZOOM
   camera.updateProjectionMatrix();
@@ -532,4 +532,24 @@ function setUp(scene) {
       onRenderFct(deltaMsec/1000, nowMsec/1000)
     })
   })
+}
+
+
+function moveCameraUp() {
+  camera.translateY(5)
+}
+function moveCameraDown() {
+  camera.translateY(-5)
+}
+function moveCameraLeft() {
+  camera.translateX(-5)
+}
+function moveCameraRight() {
+  camera.translateX(5)
+}
+function moveCameraZoomIn() {
+  camera.translateZ(-5)
+}
+function moveCameraZoomOut() {
+  camera.translateZ(5)
 }
